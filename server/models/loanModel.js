@@ -38,6 +38,11 @@ const loanRequestSchema = new Schema(
       ref: "User",
       default: null,
     },
+    lenderAcceptDate: {
+      type: Date,
+      default: new Date("0000-01-01"),
+      match: /^\d{4}-\d{2}-\d{2}$/, //eg YYYY-MM-DD
+    },
     interestRate: {
       type: Number,
       required: true,
@@ -45,7 +50,7 @@ const loanRequestSchema = new Schema(
     status: {
       type: String,
       default: "Pending",
-      enum: ["Active", "Pending", "Approved", "Rejected", "Closed"],
+      enum: ["Pending", "Accepted", "Closed"],
     },
   },
   {

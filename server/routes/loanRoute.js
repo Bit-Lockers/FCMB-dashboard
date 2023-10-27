@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { loanRequestController } = require("../controller/loanController");
+const { loanRequestController, loanAcceptController } = require("../controller/loanController");
 const { loanRequestLimiter } = require("../middleware/limiter/limiter");
 
 //middleware
@@ -14,5 +14,7 @@ router.post(
   useragent.express(),
   loanRequestController
 );
+
+router.post("/accept", loanAcceptController)
 
 module.exports = router;
