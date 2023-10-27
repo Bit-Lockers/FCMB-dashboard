@@ -4,7 +4,10 @@ const cors = require("cors");
 const db = require("./db/connectDb");
 const PORT = process.env.PORT;
 const errorMiddleware = require("./middleware/error");
+
+//routes
 const authRoute = require("./routes/authRoute");
+const loanRoute = require("./routes/loanRoute");
 
 const app = express();
 
@@ -22,6 +25,7 @@ app.use(errorMiddleware);
 
 //app routes goes here guys
 app.use("/api/v1", authRoute);
+app.use("/peerloan", loanRoute);
 
 //start server
 const start = async () => {
