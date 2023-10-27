@@ -3,7 +3,6 @@ const geoip = require("geoip-lite");
 const getContextData = (ip, useragent) => {
   const ipaddress = ip;
   const location = geoip.lookup(ip) || false;
-  //so if value is faulsy(null, undefines) it will set the value to "Unknown", false
   const city = location.city || "Unknown";
   const country = location.country || "Unknown";
   const isMobile = useragent.isMobile || false;

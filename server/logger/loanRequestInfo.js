@@ -1,6 +1,5 @@
 const getContextData = require("../utils/getContextData");
 
-
 const loanRequestInfo = async (req, message, type) => {
   try {
     const ip = req?.clientIp;
@@ -15,7 +14,7 @@ const loanRequestInfo = async (req, message, type) => {
       os,
       platform,
     } = getContextData(ip, useragent);
-    const context = `IP: ${ipaddress}, CITY: ${city}, COUNTRY: ${country}, DEVICETYPE: ${deviceType}, BROWSER: ${browser}, VERSION: ${version}, OS: ${os}, PLATFORM: ${platform}`;
+    const context = `IP ADDRESS: ${ipaddress}, CITY: ${city}, COUNTRY: ${country}, DEVICETYPE: ${deviceType}, BROWSER: ${browser}, VERSION: ${version}, OS: ${os}, PLATFORM: ${platform}`;
     const email = req?.body?.email;
     return {
         email,
