@@ -15,9 +15,7 @@ const loanRequestInfo = async (req, message, type) => {
       platform,
     } = getContextData(ip, useragent);
     const context = `IP ADDRESS: ${ipaddress}, CITY: ${city}, COUNTRY: ${country}, DEVICETYPE: ${deviceType}, BROWSER: ${browser}, VERSION: ${version}, OS: ${os}, PLATFORM: ${platform}`;
-    // const email = req?.body?.email;
     return {
-        // email,
         context,
         message,
         type
@@ -25,7 +23,6 @@ const loanRequestInfo = async (req, message, type) => {
 
   } catch (err) {
     return {
-        // email: "Unavailable",
         context: "Unavailable",
         message,
         type

@@ -5,7 +5,7 @@ const ErrorHandler = require("../utils/errorHandler");
 //model
 const LoanRequest = require("../models/loanModel");
 
-const loanRequestController = catchAsyncErrors(async (req, res) => {
+const loanRequestController = catchAsyncErrors(async (req, res, next) => {
   //later decode toke to get userID
   const { borrowerId } = req.body;
   const borrowerContext = await loanRequestInfo(
@@ -13,7 +13,6 @@ const loanRequestController = catchAsyncErrors(async (req, res) => {
     "User requesing a loan",
     "loan request"
   );
-  console.log(borrowerContext);
   const { loanType, desiredAmount, purpose, repaymentTime, interestRate } =
     req.body;
 

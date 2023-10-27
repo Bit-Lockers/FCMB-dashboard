@@ -10,6 +10,6 @@ const createLimiter = (windowMs, max, message) => {
     });
   };
 
-const loanRequestLimiter = createLimiter(10 * 10 * 6000, 15, MESSAGE) //15 requests every hour
+const loanRequestLimiter = createLimiter(10 * 10 * 6000, 30, MESSAGE) //30 requests every hour
 
 module.exports = { loanRequestLimiter };
