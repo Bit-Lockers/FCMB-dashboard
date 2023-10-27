@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { encryptField, decryptField } = require("../utils/encryption");
 
 const Schema = mongoose.Schema;
 
@@ -13,8 +14,10 @@ const loanRequestSchema = new Schema(
       type: String,
       required: true,
     },
-    borrowerDetails: {
+    borrowerContext: {
       type: String,
+      set: encryptField,
+      get: decryptField
     },
     loanType: {
       type: String,
