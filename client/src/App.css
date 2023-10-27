@@ -1,3 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Inter";
+  src: url("/path/to/inter.woff2") format("woff2"),
+    /* or other formats */ url("/path/to/inter.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Graphik";
+  src: url("/path/to/graphik.woff2") format("woff2"),
+    /* or other formats */ url("/path/to/graphik.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   padding: 0;
   margin: 0;
