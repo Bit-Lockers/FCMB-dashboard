@@ -2,6 +2,11 @@ const loanRequestInfo = require("../logger/loanRequestInfo");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
 
+//CONSTANT ERROR MESSAGE
+const DEFAULT_ERROR_MESSAGE = "Internal server error. Please try again later.";
+const LOAN_NOT_FOUND_MESSAGE = "Loan request not found.";
+const INVALID_DATE_MESSAGE = "Invalid repaymentTime format. Use YYYY-MM-DD.";
+
 //model
 const LoanRequest = require("../models/loanModel");
 
@@ -19,9 +24,7 @@ const loanRequestController = catchAsyncErrors(async (req, res, next) => {
   // Validate the repaymentTime format (YYYY-MM-DD)
   const repaymentTimeRegex = /^\d{4}-\d{2}-\d{2}$/;
   if (!repaymentTime.match(repaymentTimeRegex)) {
-    return res
-      .status(400)
-      .json({ error: "Invalid repaymentTime format. Use YYYY-MM-DD." });
+    return res.status(400).json({ error: INVALID_DATE_MESSAGE });
   }
 
   const newLoan = new LoanRequest({
@@ -38,12 +41,10 @@ const loanRequestController = catchAsyncErrors(async (req, res, next) => {
     if (savedLoan) {
       res.status(200).json({ message: "Loan Request created successfully." });
     } else {
-      res.status(500).json({ message: "Loan Request creation failed." });
+      res.status(400).json({ message: "Loan Request creation failed." });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal server error. Please try again later." });
+    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
   }
 });
 
@@ -61,13 +62,15 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
 
   const loanRequest = await LoanRequest.findById(loanRequestId);
 
+  if (!loanRequest) {
+    return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
+  }
+
   if (loanRequest.status != "Pending") {
     return res.status(400).json({ message: "Loan is unavaliable." });
   }
 
-  if (!loanRequest) {
-    return res.status(400).json({ message: "Loan Request not found." });
-  }
+  
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -81,9 +84,7 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     await loanRequest.save();
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal server error. Please try again later." });
+    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
   }
 });
 
@@ -92,7 +93,7 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
   try {
     const loanRequest = await LoanRequest.findById(loanRequestId);
     if (!loanRequest) {
-      return res.status(400).json({ message: "Loan Request not found." });
+      return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
     }
     //NOTE POPULATE THE BORROWER FIRSTNAME, LASTNAME
     //EMAIL, PHONE NUMBER WHEN AUTH CONTROLLER IS DONE
@@ -117,7 +118,7 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error. Please try again later.",
+      message: DEFAULT_ERROR_MESSAGE,
     });
   }
 });
@@ -141,9 +142,38 @@ const viewManyLoanController = catchAsyncErrors(async (req, res, next) => {
       res.status(400).json({ message: "Invalid loanNumber" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal server error. Please try again later." });
+    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+  }
+});
+
+const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
+  const { maxPrice, loanNumber } = req.body;
+
+  if (isNaN(maxPrice)) {
+    return res.status(400).json({ message: "Invalid maxPrice" });
+  }
+  if (isNaN(loanNumber)) {
+    return res.status(400).json({ message: "Invalid loanNumber" });
+  }
+
+  let filteredLoanRequests = [];
+  try {
+    const loanRequests = await LoanRequest.find();
+    loanRequests.sort((a, b) => b.timeStamp - a.timeStamp);
+
+    const numToCopy = Math.min(loanNumber, loanRequests.length);
+
+    for (let i = 0; i < numToCopy; i++) {
+      if (maxPrice >= loanRequests[i].desiredAmount) {
+        filteredLoanRequests.push(loanRequests[i]);
+      }
+      if (filteredLoanRequests.length >= loanNumber) {
+        break;
+      }
+    }
+    res.status(200).json({ message: filteredLoanRequests });
+  } catch (error) {
+    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
   }
 });
 
@@ -152,4 +182,5 @@ module.exports = {
   loanAcceptController,
   viewOneLoanController,
   viewManyLoanController,
+  viewFilterLoanController,
 };
