@@ -5,13 +5,9 @@ const Schema = mongoose.Schema;
 
 const loanRequestSchema = new Schema(
   {
-    borrower: {
+    borrowerId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-    },
-    borrowerName: {
-      type: String,
       required: true,
     },
     borrowerContext: {
@@ -39,11 +35,8 @@ const loanRequestSchema = new Schema(
     },
     lenderId: {
       type: Schema.Types.ObjectId,
+      ref: "User",
       default: null,
-    },
-    lenderName: {
-      type: String,
-      default: "empty",
     },
     interestRate: {
       type: Number,
