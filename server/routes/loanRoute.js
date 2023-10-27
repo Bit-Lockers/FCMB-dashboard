@@ -10,7 +10,7 @@ const useragent = require("express-useragent");
 router.post(
   "/request",
   loanRequestLimiter,
-  requestIp.nw(),
+  requestIp.mw(),
   useragent.express(),
   loanRequestController
 );

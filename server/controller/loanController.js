@@ -8,11 +8,12 @@ const LoanRequest = require("../models/loanModel");
 const loanRequestController = catchAsyncErrors(async (req, res) => {
   //later decode toke to get userID
   const { borrowerId } = req.body;
-  const borrowerContext = loanRequestInfo(
+  const borrowerContext = await loanRequestInfo(
     req,
     "User requesing a loan",
     "loan request"
   );
+  console.log(borrowerContext);
   const { loanType, desiredAmount, purpose, repaymentTime, interestRate } =
     req.body;
 
@@ -34,16 +35,16 @@ const loanRequestController = catchAsyncErrors(async (req, res) => {
     interestRate,
   });
   try {
-    await newLoan.save();
-    if (newLoan.isNew) {
-      res
-        .status(400)
-        .json({ message: "Loan Request has not been saved to the database." });
+    const savedLoan = await newLoan.save();
+    if (savedLoan) {
+      res.status(200).json({ message: "Loan Request created successfully." });
+    } else {
+      res.status(500).json({ message: "Loan Request creation failed." });
     }
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Internal server error. Please try again later." });
+      .json({ message: error.message });
   }
 });
 

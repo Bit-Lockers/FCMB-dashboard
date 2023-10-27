@@ -4,7 +4,7 @@ const loanRequestInfo = async (req, message, type) => {
   try {
     const ip = req?.clientIp;
     const useragent = req?.useragent;
-    const {
+    const { 
       ipaddress,
       city,
       country,
@@ -15,9 +15,9 @@ const loanRequestInfo = async (req, message, type) => {
       platform,
     } = getContextData(ip, useragent);
     const context = `IP ADDRESS: ${ipaddress}, CITY: ${city}, COUNTRY: ${country}, DEVICETYPE: ${deviceType}, BROWSER: ${browser}, VERSION: ${version}, OS: ${os}, PLATFORM: ${platform}`;
-    const email = req?.body?.email;
+    // const email = req?.body?.email;
     return {
-        email,
+        // email,
         context,
         message,
         type
@@ -25,7 +25,7 @@ const loanRequestInfo = async (req, message, type) => {
 
   } catch (err) {
     return {
-        email: "Unavailable",
+        // email: "Unavailable",
         context: "Unavailable",
         message,
         type
