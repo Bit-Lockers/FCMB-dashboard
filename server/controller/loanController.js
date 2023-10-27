@@ -59,10 +59,14 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     return res.status(400).json({ message: "Loan not accepted." });
   }
 
-  const loanRequest = await LoanRequest.findOne({ _id: loanRequestId, borrowerId });
+  const loanRequest = await LoanRequest.findById(loanRequestId);
+
+  if (loanRequest.status != "Pending") {
+    return res.status(400).json({ message: "Loan is unavaliable." });
+  }
 
   if (!loanRequest) {
-    return res.status(404).json({ message: "Loan Request not found." });
+    return res.status(400).json({ message: "Loan Request not found." });
   }
   const currentDate = new Date();
   const year = currentDate.getFullYear();
@@ -77,8 +81,75 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     await loanRequest.save();
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res
+      .status(500)
+      .json({ message: "Internal server error. Please try again later." });
   }
 });
 
-module.exports = { loanRequestController, loanAcceptController };
+const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
+  const { loanRequestId } = req.body;
+  try {
+    const loanRequest = await LoanRequest.findById(loanRequestId);
+    if (!loanRequest) {
+      return res.status(400).json({ message: "Loan Request not found." });
+    }
+    //NOTE POPULATE THE BORROWER FIRSTNAME, LASTNAME
+    //EMAIL, PHONE NUMBER WHEN AUTH CONTROLLER IS DONE
+    const {
+      borrowerId,
+      loanType,
+      desiredAmount,
+      purpose,
+      repaymentTime,
+      interestRate,
+      status,
+    } = loanRequest;
+
+    res.status(200).json({
+      borrowerId,
+      loanType,
+      desiredAmount,
+      purpose,
+      repaymentTime,
+      interestRate,
+      status,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error. Please try again later.",
+    });
+  }
+});
+
+const viewManyLoanController = catchAsyncErrors(async (req, res, next) => {
+  let { loanNumber } = req.body;
+
+  let manyLoanRequests = [];
+  try {
+    const loanRequests = await LoanRequest.find();
+    loanRequests.sort((a, b) => b.timeStamp - a.timeStamp);
+
+    if (!isNaN(loanNumber)) {
+      const numToCopy = Math.min(loanNumber, loanRequests.length);
+
+      for (let i = 0; i < numToCopy; i++) {
+        manyLoanRequests[i] = loanRequests[i];
+      }
+      res.status(200).json({ message: manyLoanRequests });
+    } else {
+      res.status(400).json({ message: "Invalid loanNumber" });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error. Please try again later." });
+  }
+});
+
+module.exports = {
+  loanRequestController,
+  loanAcceptController,
+  viewOneLoanController,
+  viewManyLoanController,
+};

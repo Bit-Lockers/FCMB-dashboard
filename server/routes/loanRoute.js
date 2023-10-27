@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { loanRequestController, loanAcceptController } = require("../controller/loanController");
+const {
+  loanRequestController,
+  loanAcceptController,
+  viewOneLoanController,
+  viewManyLoanController,
+} = require("../controller/loanController");
 const { loanRequestLimiter } = require("../middleware/limiter/limiter");
 
 //middleware
@@ -15,6 +20,9 @@ router.post(
   loanRequestController
 );
 
-router.post("/accept", loanAcceptController)
+router.post("/accept", loanAcceptController);
+
+router.get("/viewOneLoan", viewOneLoanController);
+router.get("/viewManyLoans", viewManyLoanController);
 
 module.exports = router;
