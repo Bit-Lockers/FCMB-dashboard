@@ -82,6 +82,8 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     loanRequest.lenderAcceptDate = formattedDate;
     loanRequest.status = "Accepted";
     await loanRequest.save();
+    
+    //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
     res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
