@@ -1,12 +1,16 @@
 .container {
   display: flex;
+  overflow: hidden;
   flex-wrap: wrap;
   height: 100vh;
 }
 
 .left-side {
+  background-image: url("../../../assets//Side.svg");
   flex: 0 0 35%;
-  background-color: lightblue;
+  background-repeat: no-repeat;
+  /* background-position: center; */
+  /* background-color: lightblue; */
   padding: 20px;
   box-sizing: border-box;
   display: block;
@@ -22,15 +26,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 42px;
-  border: 1px solid black;
+  gap: 5px;
 }
 
 .welcome {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 5px;
 }
 .text {
   color: #040c21;
@@ -43,6 +46,31 @@
   letter-spacing: 0.2px;
 }
 
+.personal-information {
+  color: var(--main-blue, #0c3397);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Graphik;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.2px;
+}
+
+.line {
+  height: 0.2px;
+  background: #0c3397;
+}
+
+.label {
+  color: var(--secondary-text, #091c33);
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 153.846% */
+}
+
 .text-2 {
   color: var(--secondary-text, #555b63);
   font-feature-settings: "clig" off, "liga" off;
@@ -53,14 +81,21 @@
   line-height: normal;
   letter-spacing: 0.2px;
 }
-
+/* 
 .form-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   padding: 20px;
-}
+} */
 
+.form-container {
+  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px 0px;
+}
 .form-group {
   display: flex;
   flex-direction: column;
@@ -70,10 +105,22 @@
   margin-bottom: 5px;
 }
 
+.select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
 .form-group input {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+.continue {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 767px) {
@@ -89,4 +136,7 @@
   .form-container {
     grid-template-columns: 1fr;
   }
+}
+.form-group-single {
+  grid-column: 1 / -1;
 }
