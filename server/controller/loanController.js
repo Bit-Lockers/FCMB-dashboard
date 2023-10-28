@@ -79,6 +79,7 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
 
   try {
     //debit money from lender and credit the borrower
+    // const accountDetail = await AccountDetail.findOne({"userId": })
     const lenderAccountDetail = await AccountDetail.findOne({
       userId: lenderId,
     });
@@ -97,6 +98,8 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     loanRequest.lenderAcceptDate = formattedDate;
     loanRequest.status = "Accepted";
     await loanRequest.save();
+
+    //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
     res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
@@ -113,6 +116,7 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
     if (!loanRequest) {
       return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
     }
+
     const {
       borrowerId,
       loanType,
@@ -124,6 +128,10 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
     } = loanRequest;
 
     res.status(200).json({
+      firstName,
+      lastName,
+      email,
+      BVNPhoneNUmber,
       borrowerId,
       loanType,
       desiredAmount,
@@ -193,26 +201,14 @@ const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+
 const payLoanController = catchAsyncErrors(async (req, res, next) => {
   //debit money from borrower account and pay the lender
-  try {
-    const lenderAccountDetail = await AccountDetail.findOne({
-      userId: lenderId,
-    });
-    if (amount > lenderAccountDetail.balance) {
-      return res.status(400).json({ message: "Unsufficient account balance" });
-    }
-    lenderAccountDetail.balance -= Number(amount);
-    lenderAccountDetail.save();
-    const borrowerAccountDetail = await AccountDetail.findOne({
-      userId: borrowerId,
-    });
-    borrowerAccountDetail.balance += Number(amount);
-    borrowerAccountDetail.save();
-  } catch (error) {
-    
-  }
-});
+  
+
+})
+
+
 
 module.exports = {
   loanRequestController,
