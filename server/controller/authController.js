@@ -110,6 +110,6 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
 module.exports = {
   registerUser,
   loginUser,
-  getAllUsers,
-  getOneUser,
+  // getAllUsers,
+  // getOneUser,
 };

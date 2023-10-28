@@ -60,30 +60,29 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
   if (decision.toLowerCase() !== "accepted") {
     return res.status(400).json({ message: "Loan not accepted." });
   }
-
-  const loanRequest = await LoanRequest.findById(loanRequestId);
-
-  if (!loanRequest) {
-    return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
-  }
-
-  if (loanRequest.status != "Pending") {
-    return res.status(400).json({ message: "Loan is unavaliable." });
-  }
-
-  const currentDate = new Date();
-  const year = currentDate.getFullYear();
-  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-  const day = String(currentDate.getDate()).padStart(2, "0");
-  const formattedDate = `${year}-${month}-${day}`;
-
   try {
+    const loanRequest = await LoanRequest.findById(loanRequestId);
+
+    if (!loanRequest) {
+      return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
+    }
+
+    if (loanRequest.status != "Pending") {
+      return res.status(400).json({ message: "Loan is unavaliable." });
+    }
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+
     //debit money from lender and credit the borrower
     // const accountDetail = await AccountDetail.findOne({"userId": })
     const lenderAccountDetail = await AccountDetail.findOne({
       userId: lenderId,
     });
-    if (amount > lenderAccountDetail.balance) {
+    if (Number(amount) > lenderAccountDetail.balance) {
       return res.status(400).json({ message: "Unsufficient account balance" });
     }
     lenderAccountDetail.balance -= Number(amount);
@@ -201,14 +200,36 @@ const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
 const payLoanController = catchAsyncErrors(async (req, res, next) => {
+  const { loanRequestId, borrowerId, lenderId, amount } = req.body;
   //debit money from borrower account and pay the lender
-  
+  try {
+    //debit money from lender and credit the borrower
+    const borrowerAccountDetail = await AccountDetail.findOne({
+      userId: lenderId,
+    });
+    if (Number(amount) > borrowerAccountDetail.balance) {
+      return res.status(400).json({ message: "Unsufficient account balance" });
+    }
+    borrowerAccountDetail.balance -= Number(amount);
+    borrowerAccountDetail.save();
+    const lenderAccountDetail = await AccountDetail.findOne({
+      userId: borrowerId,
+    });
+    lenderAccountDetail.balance += Number(amount);
+    lenderAccountDetail.save();
 
-})
+    const loanRequest = await LoanRequest.findById(loanRequestId);
+    loanRequest.desiredAmount = 0;
+    loanRequest.status = "Closed";
+    await loanRequest.save();
 
-
+    //connect FCMB api to enable transfer from one account to the other
+    res.status(200).json({ message: "Loan paid successfully." });
+  } catch (error) {
+    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+  }
+});
 
 module.exports = {
   loanRequestController,
