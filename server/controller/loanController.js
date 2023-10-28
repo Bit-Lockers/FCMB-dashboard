@@ -62,6 +62,9 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
   }
   try {
     const loanRequest = await LoanRequest.findById(loanRequestId);
+    if (loanRequest.desiredAmount != Number(amount)) {
+      return res.status(400).json({message: "Amount is not equal"})
+    }
 
     if (!loanRequest) {
       return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
@@ -97,8 +100,6 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     loanRequest.lenderAcceptDate = formattedDate;
     loanRequest.status = "Accepted";
     await loanRequest.save();
-
-    //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
     res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
@@ -202,29 +203,29 @@ const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
 
 const payLoanController = catchAsyncErrors(async (req, res, next) => {
   const { loanRequestId, borrowerId, lenderId, amount } = req.body;
-  //debit money from borrower account and pay the lender
   try {
-    //debit money from lender and credit the borrower
+    const loanRequest = await LoanRequest.findById(loanRequestId);
+    if (loanRequest.desiredAmount != Number(amount)) {
+      return res.status(400).json({ message: "Pay amount borrowed." });
+    }
     const borrowerAccountDetail = await AccountDetail.findOne({
-      userId: lenderId,
+      userId: borrowerId,
     });
+
     if (Number(amount) > borrowerAccountDetail.balance) {
       return res.status(400).json({ message: "Unsufficient account balance" });
     }
     borrowerAccountDetail.balance -= Number(amount);
-    borrowerAccountDetail.save();
+    await borrowerAccountDetail.save();
     const lenderAccountDetail = await AccountDetail.findOne({
-      userId: borrowerId,
+      userId: lenderId,
     });
     lenderAccountDetail.balance += Number(amount);
-    lenderAccountDetail.save();
+    await lenderAccountDetail.save();
 
-    const loanRequest = await LoanRequest.findById(loanRequestId);
-    loanRequest.desiredAmount = 0;
     loanRequest.status = "Closed";
     await loanRequest.save();
 
-    //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan paid successfully." });
   } catch (error) {
     res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
@@ -237,4 +238,5 @@ module.exports = {
   viewOneLoanController,
   viewManyLoanController,
   viewFilterLoanController,
+  payLoanController,
 };
