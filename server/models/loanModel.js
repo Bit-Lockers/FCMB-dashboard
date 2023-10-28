@@ -13,7 +13,7 @@ const loanRequestSchema = new Schema(
     borrowerContext: {
       type: String,
       set: encryptField,
-      get: decryptField
+      get: decryptField,
     },
     loanType: {
       type: String,
