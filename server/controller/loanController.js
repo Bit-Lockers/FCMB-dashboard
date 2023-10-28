@@ -9,6 +9,7 @@ const INVALID_DATE_MESSAGE = "Invalid repaymentTime format. Use YYYY-MM-DD.";
 
 //model
 const LoanRequest = require("../models/loanModel");
+const AccountDetail = require("../models/AccountModel");
 
 const loanRequestController = catchAsyncErrors(async (req, res, next) => {
   //later decode toke to get userID
@@ -49,7 +50,7 @@ const loanRequestController = catchAsyncErrors(async (req, res, next) => {
 });
 
 const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
-  const { loanRequestId, borrowerId, lenderId, decision } = req.body;
+  const { loanRequestId, borrowerId, lenderId, decision, amount } = req.body;
   // Decision can be "accepted" or "rejected"
 
   if (borrowerId == lenderId) {
@@ -78,8 +79,19 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
 
   try {
     //debit money from lender and credit the borrower
-    // const accountDetail = await AccountDetail.findOne({"userId": })
-
+    const lenderAccountDetail = await AccountDetail.findOne({
+      userId: lenderId,
+    });
+    if (amount > lenderAccountDetail.balance) {
+      return res.status(400).json({ message: "Unsufficient account balance" });
+    }
+    lenderAccountDetail.balance -= Number(amount);
+    lenderAccountDetail.save();
+    const borrowerAccountDetail = await AccountDetail.findOne({
+      userId: borrowerId,
+    });
+    borrowerAccountDetail.balance += Number(amount);
+    borrowerAccountDetail.save();
 
     loanRequest.lenderId = lenderId;
     loanRequest.lenderAcceptDate = formattedDate;
@@ -181,13 +193,26 @@ const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-
 const payLoanController = catchAsyncErrors(async (req, res, next) => {
   //debit money from borrower account and pay the lender
-
-})
-
-
+  try {
+    const lenderAccountDetail = await AccountDetail.findOne({
+      userId: lenderId,
+    });
+    if (amount > lenderAccountDetail.balance) {
+      return res.status(400).json({ message: "Unsufficient account balance" });
+    }
+    lenderAccountDetail.balance -= Number(amount);
+    lenderAccountDetail.save();
+    const borrowerAccountDetail = await AccountDetail.findOne({
+      userId: borrowerId,
+    });
+    borrowerAccountDetail.balance += Number(amount);
+    borrowerAccountDetail.save();
+  } catch (error) {
+    
+  }
+});
 
 module.exports = {
   loanRequestController,

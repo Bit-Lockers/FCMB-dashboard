@@ -107,15 +107,6 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
       )
     );
   }
-  const getUser = await User.findOne({ email: email });
-  const userId = getUser._id;
-
-  const accountNumber = await generateUniqueAccountNumber();
-  await Account.create({
-    userId,
-    accountNumber,
-    balance: 50000,
-  });
 
   //Now to send token along with user since all checks are met
   sendToken(user, 200, res);
