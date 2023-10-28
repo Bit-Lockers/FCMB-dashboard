@@ -70,7 +70,6 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     return res.status(400).json({ message: "Loan is unavaliable." });
   }
 
-  
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, "0");
@@ -82,7 +81,7 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     loanRequest.lenderAcceptDate = formattedDate;
     loanRequest.status = "Accepted";
     await loanRequest.save();
-    
+
     //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
@@ -97,8 +96,9 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
     if (!loanRequest) {
       return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
     }
-    //NOTE POPULATE THE BORROWER FIRSTNAME, LASTNAME
-    //EMAIL, PHONE NUMBER WHEN AUTH CONTROLLER IS DONE
+
+    const { firstName, lastName, email, BVNPhoneNUmber } = req.user;
+
     const {
       borrowerId,
       loanType,
@@ -110,6 +110,10 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
     } = loanRequest;
 
     res.status(200).json({
+      firstName,
+      lastName,
+      email,
+      BVNPhoneNUmber,
       borrowerId,
       loanType,
       desiredAmount,
