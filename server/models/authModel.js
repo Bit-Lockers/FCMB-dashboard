@@ -21,28 +21,14 @@ const authSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: [20, "Your FirstName should not exceed 20 characters"],
   },
-  email: {
+  motherMaidenName: {
     type: String,
-    required: [true, "Please provide an email to create an account"],
-    unique: true,
-    validate: [validator.isEmail, "Please enter a valid email"],
-  },
-  password: {
-    type: String,
-    required: [true, "Please provide your password to create an account"],
-  },
-  BVNPhoneNumber: {
-    type: Number,
     required: [
       true,
-      "Please provide the phone number tied to your BVN to open an account",
+      "Please provide mother's maiden name to create an account",
     ],
-    unique: [true, "Please provide a unique phone number to open an account"],
-    maxlength: [11, "Your phone number should not exceed 11 characters"],
-  },
-  preferredPhoneNumber: {
-    type: Number,
-    required: [true, "Please provide a preferred number to open an account"],
+    minlength: 3,
+    maxlength: [20, "Your motherMaidenName should not exceed 20 characters"],
   },
   dateOfBirth: {
     type: Date,
@@ -53,19 +39,37 @@ const authSchema = new mongoose.Schema({
     required: [true, "Please provide a gender to create an account"],
     enum: ["Male", "Female"],
   },
-  BVN: {
-    type: Number,
-    required: [true, "Please provide a BVN for verification"],
-    unique: true,
-  },
-  motherMaidenName: {
+  bvnMobileNumber: {
     type: String,
     required: [
       true,
-      "Please provide mother's maiden name to create an account",
+      "Please provide the phone number tied to your BVN to open an account",
     ],
-    minlength: 3,
-    maxlength: [20, "Your motherMaidenName should not exceed 20 characters"],
+    unique: [true, "Please provide a unique phone number to open an account"],
+    maxlength: [11, "Your phone number should not exceed 11 characters"],
+  },
+  preferredMobileNumber: {
+    type: String,
+    required: [true, "Please provide a preferred number to open an account"],
+  },
+  email: {
+    type: String,
+    required: [true, "Please provide an email to create an account"],
+    unique: true,
+    validate: [validator.isEmail, "Please enter a valid email"],
+  },
+  address: {
+    addrLine1: String,
+    houseNum: String,
+    streetName: String,
+    city: String,
+    state: String,
+    country: String,
+  },
+  bvn: {
+    type: Number,
+    required: [true, "Please provide a BVN for verification"],
+    unique: true,
   },
   maritalStatus: {
     type: String,
@@ -88,32 +92,25 @@ const authSchema = new mongoose.Schema({
     required: [true, "Please provide a salutation to create an account"],
     enum: ["Mr", "Mrs", "Master", "Mistress"],
   },
-  // image: {
-  //   public_id: {
-  //     type: String,
-  //     required: true,
-  //   },
-  //   url: {
-  //     type: String,
-  //     required: true,
-  //   },
+  image: {
+    type: String,
+  },
+  password: {
+    type: String,
+    required: [true, "Please provide your password to create an account"],
+  },
+  // city: {
+  //   type: String,
+  //   required: [true, "Please provide a city name to create an account"],
   // },
-  address: {
-    type: String,
-    required: [true, "Please provide an address to create an account"],
-  },
-  city: {
-    type: String,
-    required: [true, "Please provide a city name to create an account"],
-  },
-  state: {
-    type: String,
-    required: [true, "Please provide a state to create an account"],
-  },
-  country: {
-    type: String,
-    required: [true, "Please provide a country to create an account"],
-  },
+  // state: {
+  //   type: String,
+  //   required: [true, "Please provide a state to create an account"],
+  // },
+  // country: {
+  //   type: String,
+  //   required: [true, "Please provide a country to create an account"],
+  // },
   createdAt: {
     type: Date,
     default: Date.now,
