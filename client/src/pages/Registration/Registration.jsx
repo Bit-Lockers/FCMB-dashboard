@@ -1,8 +1,8 @@
 import "./Registration.css";
 import React, { useState } from "react";
 import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
-import Button from "../../../components/button";
-import logo from "../../../assets/logo.svg";
+import Button from "../../components/Button";
+import logo from "../../assets/logo.svg";
 import CheckIcon from "@mui/icons-material/Check";
 const fullCenterALign = {
   display: "flex",
@@ -143,7 +143,6 @@ const Registration = () => {
               width: "70%",
               height: "100%",
               marginBottom: "50px",
-              border: "1px solid black",
             }}
             className="page-1"
           >
