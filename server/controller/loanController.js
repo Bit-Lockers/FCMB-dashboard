@@ -77,12 +77,14 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
   const formattedDate = `${year}-${month}-${day}`;
 
   try {
+    //debit money from lender and credit the borrower
+    // const accountDetail = await AccountDetail.findOne({"userId": })
+
+
     loanRequest.lenderId = lenderId;
     loanRequest.lenderAcceptDate = formattedDate;
     loanRequest.status = "Accepted";
     await loanRequest.save();
-
-    //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
     res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
@@ -178,6 +180,14 @@ const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
     res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
   }
 });
+
+
+const payLoanController = catchAsyncErrors(async (req, res, next) => {
+  //debit money from borrower account and pay the lender
+
+})
+
+
 
 module.exports = {
   loanRequestController,

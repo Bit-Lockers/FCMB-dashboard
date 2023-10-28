@@ -1,7 +1,9 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
 const User = require("../models/authModel");
+const Account = require("../models/AccountModel");
 const sendToken = require("../utils/jwtToken");
+const { generateUniqueAccountNumber } = require("../utils/randomAccountNum");
 
 const registerUser = catchAsyncErrors(async (req, res, next) => {
   //set all parameters required for registration to request.body
@@ -62,6 +64,16 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
     country,
   });
 
+  const getUser = await User.findOne({ email });
+  const userId = getUser._id;
+
+  const accountNumber = await generateUniqueAccountNumber();
+  await Account.create({
+    userId,
+    accountNumber,
+    balance: 50000,
+  });
+
   sendToken(user, 201, res);
 });
 
@@ -95,6 +107,15 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
       )
     );
   }
+  const getUser = await User.findOne({ email: email });
+  const userId = getUser._id;
+
+  const accountNumber = await generateUniqueAccountNumber();
+  await Account.create({
+    userId,
+    accountNumber,
+    balance: 50000,
+  });
 
   //Now to send token along with user since all checks are met
   sendToken(user, 200, res);
