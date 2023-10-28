@@ -65,4 +65,41 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
   sendToken(user, 201, res);
 });
 
-module.exports = { registerUser };
+const loginUser = catchAsyncErrors(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  // simple check to ensure correct email and password are supplied
+  if (!email || !password) {
+    return next(
+      new ErrorHandler("Please enter correct email and password", 400)
+    );
+  }
+
+  // to find out if the user email already exists on database for login
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!user) {
+    return next(
+      new ErrorHandler("Invalid email!, Please provide a valid email ", 401)
+    );
+  }
+
+  // A little check to see if password matches
+  const isPasswordMatched = await user.comparePassword(password);
+  if (isPasswordMatched) {
+    return next(
+      new ErrorHandler(
+        "Invalid password!, Please provide a valid password",
+        401
+      )
+    );
+  }
+
+  //Now to send token along with user since all checks are met
+  sendToken(user, 200, res);
+});
+
+module.exports = {
+  registerUser,
+  loginUser,
+};
