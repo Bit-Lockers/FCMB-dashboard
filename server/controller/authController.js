@@ -1,7 +1,9 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
 const User = require("../models/authModel");
+const Account = require("../models/AccountModel");
 const sendToken = require("../utils/jwtToken");
+const { generateUniqueAccountNumber } = require("../utils/randomAccountNum");
 
 const registerUser = catchAsyncErrors(async (req, res, next) => {
   //set all parameters required for registration to request.body
@@ -12,21 +14,17 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
     email,
     password,
     confirmPassword,
-    BVNPhoneNumber,
+    bvnMobileNumber,
     preferredPhoneNumber,
     dateOfBirth,
     gender,
-    BVN,
+    bvn,
     motherMaidenName,
     maritalStatus,
     occupation,
     employmentStatus,
     salutation,
-    // image,
     address,
-    city,
-    state,
-    country,
   } = req.body;
 
   //To make sure passwords match on registration
@@ -37,29 +35,38 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
   if (checkUserEmail) {
     return next(new ErrorHandler("The email provided needs to be unique", 403));
   }
+  // Convert the dateOfBirth string to a Date object for UTC time format
+  const dobDate = new Date(dateOfBirth);
   // create the user itself
   const user = await User.create({
     firstName,
     middleName,
     lastName,
-    email,
-    password,
-    confirmPassword,
-    BVNPhoneNumber,
-    preferredPhoneNumber,
-    dateOfBirth,
-    gender,
-    BVN,
     motherMaidenName,
+    dateOfBirth: dobDate,
+    gender,
+    bvnMobileNumber,
+    preferredPhoneNumber,
+    email,
+    address,
+    bvn,
     maritalStatus,
     occupation,
     employmentStatus,
     salutation,
-    // image,
-    address,
-    city,
-    state,
-    country,
+    image,
+    password,
+    confirmPassword,
+  });
+
+  const getUser = await User.findOne({ email });
+  const userId = getUser._id;
+
+  const accountNumber = await generateUniqueAccountNumber();
+  await Account.create({
+    userId,
+    accountNumber,
+    balance: 50000,
   });
 
   sendToken(user, 201, res);
@@ -103,4 +110,6 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
 module.exports = {
   registerUser,
   loginUser,
+  // getAllUsers,
+  // getOneUser,
 };
