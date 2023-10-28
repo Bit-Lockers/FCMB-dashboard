@@ -3,7 +3,6 @@ const ErrorHandler = require("../utils/errorHandler");
 const User = require("../models/authModel");
 const Account = require("../models/AccountModel");
 const sendToken = require("../utils/jwtToken");
-const axios = require("axios");
 const { generateUniqueAccountNumber } = require("../utils/randomAccountNum");
 
 const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -60,7 +59,7 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
     confirmPassword,
   });
 
-  const findUser = await User.findOne({ email });
+  const getUser = await User.findOne({ email });
   const userId = getUser._id;
 
   const accountNumber = await generateUniqueAccountNumber();
