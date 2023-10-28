@@ -65,6 +65,7 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
   sendToken(user, 201, res);
 });
 
+// Authentication logic for user login
 const loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -86,7 +87,7 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
 
   // A little check to see if password matches
   const isPasswordMatched = await user.comparePassword(password);
-  if (isPasswordMatched) {
+  if (!isPasswordMatched) {
     return next(
       new ErrorHandler(
         "Invalid password!, Please provide a valid password",
