@@ -1,8 +1,10 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
 const User = require("../models/authModel");
+const Account = require("../models/AccountModel");
 const sendToken = require("../utils/jwtToken");
 const axios = require("axios");
+const { generateUniqueAccountNumber } = require("../utils/randomAccountNum");
 
 const registerUser = catchAsyncErrors(async (req, res, next) => {
   //set all parameters required for registration to request.body
@@ -58,6 +60,16 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
     confirmPassword,
   });
 
+  const findUser = await User.findOne({ email });
+  const userId = getUser._id;
+
+  const accountNumber = await generateUniqueAccountNumber();
+  await Account.create({
+    userId,
+    accountNumber,
+    balance: 50000,
+  });
+
   sendToken(user, 201, res);
 });
 
@@ -91,86 +103,19 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
       )
     );
   }
+  const getUser = await User.findOne({ email: email });
+  const userId = getUser._id;
+
+  const accountNumber = await generateUniqueAccountNumber();
+  await Account.create({
+    userId,
+    accountNumber,
+    balance: 50000,
+  });
 
   //Now to send token along with user since all checks are met
   sendToken(user, 200, res);
 });
-
-const getOneUser = catchAsyncErrors(async (req, res, next) => {
-  try {
-    //set the user id as a request parameter on the endpoint
-    const { user_id } = req.params;
-    // To find the user in the database
-    const user = await User.findOne({ _id: user_id });
-    // Throw error if no user with ID is found
-    if (!user) {
-      return next(new ErrorHandler("No user with ID found", 404));
-    }
-    // To return user if found in the database
-    res.status(200).json({
-      message: "User with ID successfully found",
-      user,
-    });
-  } catch (error) {
-    return next(new ErrorHandler("User not successfully found", 500));
-  }
-});
-
-const getAllUsers = catchAsyncErrors(async (req, res, next) => {
-  try {
-    // First we have to count all users in the datebase
-    const userCount = await User.countDocuments();
-    //Find all the users in the database
-    const allUsers = await User.find();
-    // Error handling if no user is found in the database
-    if (userCount === 0) {
-      return next(new ErrorHandler("No user found in the database", 404));
-    }
-    res.status(200).json({
-      message: "All Users successfully found",
-      allUsers,
-      userCount,
-    });
-  } catch (error) {
-    return next(new ErrorHandler("All users not found in the database", 500));
-  }
-});
-
-//API  call for creating an account using axios
-
-const apiUrl =
-  "https://devapi.fcmb.com/OpenAccount-clone/api/Accounts/v1/CreateRetailAccountWithBvn";
-
-// Request body paramters
-const { firstName, midlleName, lastName, motherMaidenName } = req.body;
-
-// Axios configuration
-const config = {
-  method: "post", // Use 'post' for POST requests
-  url: apiUrl,
-  data: body, // Set the request body
-  headers: {
-    Client_id: "250",
-    "x-token":
-      "aa9d142f294e393d45fffa83e8ff2b735060b393aece60c6a4b29ac1f0ad8bfc8750f49bbc1dd372f719ed283170d207a112260b1cad4638cbc36900549b0882",
-    UTCTimestamp: "2023-08-12T17:25:53.435",
-    "Content-Type": "application/json",
-    "Cache-Control": "no-cache",
-    "Ocp-Apim-Subscription-Key": "5089766abfc04e6abec49840bf83d7bf",
-  },
-};
-
-async function makeRequest() {
-  try {
-    const response = await axios(config);
-    console.log("Response Data:", response.data);
-  } catch (error) {
-    console.error("Error:", error.response.data);
-  }
-}
-
-// Call the async function to make the request
-makeRequest();
 
 module.exports = {
   registerUser,

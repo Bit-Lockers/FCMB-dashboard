@@ -1,0 +1,20 @@
+.home-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid black;
+  background: linear-gradient(171deg, #96f6dc -16.98%, #083473 128.65%);
+}
+
+.sign-inn {
+  border: 1px solid black;
+  display: inline-flex;
+  padding: 32px 16px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border-radius: 16px;
+  background: #fff;
+}

@@ -92,12 +92,13 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
 const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
   const { loanRequestId } = req.body;
   try {
-    const loanRequest = await LoanRequest.findById(loanRequestId);
+    const loanRequest = await LoanRequest.findById(loanRequestId).populate(
+      "borrowerId",
+      "firstName lastName email preferredPhoneNumber dateOfBirth gender employmentStatus occupation salutation"
+    );
     if (!loanRequest) {
       return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
     }
-
-    const { firstName, lastName, email, BVNPhoneNUmber } = req.user;
 
     const {
       borrowerId,
@@ -124,7 +125,7 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: DEFAULT_ERROR_MESSAGE,
+      message: error.message,
     });
   }
 });
