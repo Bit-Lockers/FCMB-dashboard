@@ -1,0 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 367px) {
+    .btns {
+        flex-direction: column-reverse;
+        
+    }
+} 
