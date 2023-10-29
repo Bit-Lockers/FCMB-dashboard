@@ -1,0 +1,17 @@
+* {
+    box-sizing: border-box;
+}
+
+.heading {
+    font-size: 30px;
+    color: #091C33;
+}
+
+@media screen and (max-width: 1024px) {
+    .detail {
+        flex-direction: column;
+    }
+    .btns {
+        flex-direction: column-reverse;
+    }
+}

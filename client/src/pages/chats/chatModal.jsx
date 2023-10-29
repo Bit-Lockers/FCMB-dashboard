@@ -1,8 +1,11 @@
-import { usestate } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
 
 const chatModal = () => {
-  return <div>chatModal</div>;
+  // const navigate = useNavigate();
+  // const [username, setUsername ] = useState("");
+
+  return <div></div>;
 };
 
 export default chatModal;
