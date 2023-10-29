@@ -34,6 +34,44 @@ app.use(errorMiddleware);
 app.use("/api/v1", authRoute);
 app.use("/peerloan", loanRoute);
 
+//simple logic for open channel messaging
+let users = [];
+
+io.on("connection", (socket) => {
+  console.log(`User with ID ${socket.id} just connected`);
+
+  //Listens and logs the message to the console
+  socket.on("message", (data) => {
+    console.log(data);
+  });
+
+  //sends message to all users on the server
+  socket.on("message", (data) => {
+    io.emit("messageResponse", data);
+  });
+
+  socket.on("typing", (data) => socket.broadcast.emit("typingResponse", data));
+
+  //check for when a new user joins the chat
+  socket.on("newUser", (data) => {
+    users.push(data);
+    console.log(users);
+
+    io.emit("newUserResponse", users);
+  });
+
+  //to disconnect from the chat room
+  socket.on("disconnect", () => {
+    console.log(`User with ID ${socket.id} disconnected`);
+
+    users = users.filter((user) => user.socketID !== socket.id);
+
+    io.emit("newUserResponse", users);
+    socket.disconnect();
+  });
+});
+//End of chat system logic
+
 //start server
 const start = async () => {
   try {
