@@ -108,6 +108,10 @@ const authSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  balance: {
+    type: Number,
+    default: 50000,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
