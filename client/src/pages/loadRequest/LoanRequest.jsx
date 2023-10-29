@@ -56,22 +56,22 @@ const Search = styled('div')(({ theme }) => ({
 
 
 const columns = [
-  { id: "beneficiary", label: "Beneficiary", width: "250px" },
-  { id: "loanType", label: "Loan Type", width: 86 },
+  { id: "beneficiary", label: "Beneficiary", width: 150 },
+  { id: "loanType", label: "Loan Type", width: 100 },
   {
     id: "desiredAmount",
     label: "Desired Amount",
-    width: 140,
+    width: 130,
   },
   {
     id: "purpose",
     label: "Purpose",
-    width: 160,
+    width: 100,
   },
   {
     id: "interestRate",
     label: "Interest Rate",
-    width: 86,
+    width: 80,
   },
   {
     id: "repaymentDate",
@@ -82,7 +82,7 @@ const columns = [
   {
     id: "action",
     label: "Action",
-    width: 91,
+    width: 70,
   },
 ];
 
