@@ -4,6 +4,7 @@ import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
 import Button from "../../components/Button";
 import logo from "../../assets/logo.svg";
 import CheckIcon from "@mui/icons-material/Check";
+import { authState } from "../../context/authContext";
 const fullCenterALign = {
   display: "flex",
   alignItems: "center",
@@ -12,6 +13,7 @@ const fullCenterALign = {
 
 const Registration = () => {
   const [index, setIndex] = useState(0);
+  const { user, setUser } = authState();
   return (
     <Stack direction="row" className="container">
       {/* left side */}
@@ -27,7 +29,11 @@ const Registration = () => {
           />
           <div className="steps">
             <ul>
-              <li style={{ position: "relative" }} onClick={() => setIndex(0)}>
+              <li
+                className="li"
+                style={{ position: "relative" }}
+                onClick={() => setIndex(0)}
+              >
                 {index > 0 ? (
                   <CheckIcon
                     className="icon"

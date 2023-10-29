@@ -1,0 +1,132 @@
+.introduction {
+  display: flex;
+  width: 743px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.welcome-message {
+  color: var(--secondary-text, #091c33);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.welcome-info {
+  color: var(--secondary-text, #091c33);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.account-balance {
+  width: 343px;
+  height: 135px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: #fff;
+  margin: 0;
+  padding-top: 20px;
+  padding-left: 24px;
+}
+.ballance-info {
+  display: flex;
+  width: 146px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.balance {
+  color: var(--secondary-text, #091c33);
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.small-span {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.big-bal {
+  color: #1a1a1a;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.grid-item {
+  height: 179px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  border-radius: 8px;
+  background: #fff;
+  margin: 0;
+  padding-top: 20px;
+  padding-left: 24px;
+}
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+.active-loan {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #9b51e0;
+}
+
+.pending-loan {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: #f2994a;
+}
+
+.total-lend {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--main-blue, #0c3397);
+}
+
+.total-earned {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background: var(--main-green, #33c6a3);
+}
