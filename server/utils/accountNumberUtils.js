@@ -20,6 +20,7 @@ const assignAccountNumber = async (user) => {
       isUnique = true;
     }
   }
+  //   console.log(accountNumber);
   return accountNumber;
 };
 

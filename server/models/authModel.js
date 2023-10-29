@@ -106,6 +106,7 @@ const authSchema = new mongoose.Schema({
   },
   accountNumber: {
     type: String,
+    required: true,
   },
   createdAt: {
     type: Date,

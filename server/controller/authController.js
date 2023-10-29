@@ -3,6 +3,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const User = require("../models/authModel");
 const sendToken = require("../utils/jwtToken");
 const assignAccountNumber = require("../utils/accountNumberUtils");
+const Account = require("../models/AccountModel");
 
 const registerUser = catchAsyncErrors(async (req, res, next) => {
   // Set all parameters required for registration to request.body
@@ -43,6 +44,7 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
   try {
     // Generate and assign an account number
     const accountNumber = await assignAccountNumber();
+    console.log(accountNumber);
 
     // Create the user using the create method
     const user = await User.create({
@@ -65,7 +67,16 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
       city,
       state,
       country,
-      accountNumber, // Include the generated account number here
+      accountNumber,
+    });
+
+    const getUser = await User.findOne({ email });
+    const userId = getUser._id;
+
+    await Account.create({
+      userId,
+      accountNumber,
+      balance: 0,
     });
 
     // Send a token and the user's data in the response

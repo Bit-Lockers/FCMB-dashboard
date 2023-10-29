@@ -6,6 +6,7 @@ const {
   viewOneLoanController,
   viewManyLoanController,
   viewFilterLoanController,
+  payLoanController,
 } = require("../controller/loanController");
 const { loanRequestLimiter } = require("../middleware/limiter/limiter");
 
@@ -26,5 +27,7 @@ router.post("/accept", loanAcceptController);
 router.get("/viewOneLoan", viewOneLoanController);
 router.get("/viewManyLoans", viewManyLoanController);
 router.get("/viewFilteredLoans", viewFilterLoanController)
+
+router.post("/payLoan", payLoanController)
 
 module.exports = router;
