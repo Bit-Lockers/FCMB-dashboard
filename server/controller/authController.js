@@ -1,12 +1,12 @@
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../utils/errorHandler");
 const User = require("../models/authModel");
-const Account = require("../models/AccountModel");
 const sendToken = require("../utils/jwtToken");
-const { generateUniqueAccountNumber } = require("../utils/randomAccountNum");
+const assignAccountNumber = require("../utils/accountNumberUtils");
+const Account = require("../models/AccountModel");
 
 const registerUser = catchAsyncErrors(async (req, res, next) => {
-  //set all parameters required for registration to request.body
+  // Set all parameters required for registration to request.body
   const {
     firstName,
     middleName,
@@ -15,7 +15,7 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
     password,
     confirmPassword,
     bvnMobileNumber,
-    preferredPhoneNumber,
+    preferredMobileNumber,
     dateOfBirth,
     gender,
     bvn,
@@ -25,51 +25,68 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
     employmentStatus,
     salutation,
     address,
+    city,
+    state,
+    country,
   } = req.body;
 
-  //To make sure passwords match on registration
+  // Ensure passwords match on registration
   if (password !== confirmPassword) {
     return next(new ErrorHandler("Passwords do not match", 403));
   }
+
+  // Check if the email is unique
   const checkUserEmail = await User.findOne({ email });
   if (checkUserEmail) {
     return next(new ErrorHandler("The email provided needs to be unique", 403));
   }
-  // Convert the dateOfBirth string to a Date object for UTC time format
-  const dobDate = new Date(dateOfBirth);
-  // create the user itself
-  const user = await User.create({
-    firstName,
-    middleName,
-    lastName,
-    motherMaidenName,
-    dateOfBirth: dobDate,
-    gender,
-    bvnMobileNumber,
-    preferredPhoneNumber,
-    email,
-    address,
-    bvn,
-    maritalStatus,
-    occupation,
-    employmentStatus,
-    salutation,
-    image,
-    password,
-    confirmPassword,
-  });
 
-  const getUser = await User.findOne({ email });
-  const userId = getUser._id;
+  try {
+    // Generate and assign an account number
+    const accountNumber = await assignAccountNumber();
+    console.log(accountNumber);
 
-  const accountNumber = await generateUniqueAccountNumber();
-  await Account.create({
-    userId,
-    accountNumber,
-    balance: 50000,
-  });
+    // Create the user using the create method
+    const user = await User.create({
+      firstName,
+      middleName,
+      lastName,
+      email,
+      password,
+      bvnMobileNumber,
+      preferredMobileNumber,
+      dateOfBirth,
+      gender,
+      bvn,
+      motherMaidenName,
+      maritalStatus,
+      occupation,
+      employmentStatus,
+      salutation,
+      address,
+      city,
+      state,
+      country,
+      accountNumber,
+    });
 
-  sendToken(user, 201, res);
+    const getUser = await User.findOne({ email });
+    const userId = getUser._id;
+
+    await Account.create({
+      userId,
+      accountNumber,
+      balance: 0,
+    });
+
+    // Send a token and the user's data in the response
+    sendToken(user, 201, res);
+  } catch (error) {
+    console.error("Error creating the account:", error);
+    return next(
+      new ErrorHandler("An error occurred while creating the account.", 500)
+    );
+  }
 });
 
 // Authentication logic for user login
@@ -103,13 +120,55 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  //Now to send token along with user since all checks are met
+  //Now to send token along logged in  with user since all checks are met
   sendToken(user, 200, res);
+});
+
+const getOneUser = catchAsyncErrors(async (req, res, next) => {
+  try {
+    // set the id to the request paramter
+    const { user_id } = req.params;
+    // Find one user in the database
+    const user = await User.findOne({ _id: user_id });
+    //Error handling if user is not found
+    if (!user) {
+      return next(
+        new ErrorHandler("User with id not found on the database", 404)
+      );
+    }
+    //return the user found from database
+    res.status(200).json({
+      message: "User successfully found",
+      user,
+    });
+  } catch (error) {
+    return next(new ErrorHandler("User was not successfully found", 500));
+  }
+});
+
+const getAllUsers = catchAsyncErrors(async (req, res, next) => {
+  try {
+    //getting the number of users from database
+    const userCount = await User.countDocuments();
+    // to find all the users in database
+    const allUsers = await User.find();
+    //A little error handling for use
+    if (userCount === 0) {
+      return next(new ErrorHandler("No users found in the database", 404));
+    }
+    res.status(200).json({
+      message: "Users successfully found",
+      allUsers,
+      userCount,
+    });
+  } catch (error) {
+    return next(new ErrorHandler("Users not successfully found", 500));
+  }
 });
 
 module.exports = {
   registerUser,
   loginUser,
-  // getAllUsers,
-  // getOneUser,
+  getAllUsers,
+  getOneUser,
 };

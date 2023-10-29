@@ -11,6 +11,10 @@ const INVALID_DATE_MESSAGE = "Invalid repaymentTime format. Use YYYY-MM-DD.";
 const LoanRequest = require("../models/loanModel");
 const AccountDetail = require("../models/AccountModel");
 
+
+/**
+ * @route PATCH /peerloan/request/
+ */
 const loanRequestController = catchAsyncErrors(async (req, res, next) => {
   //later decode toke to get userID
   const { borrowerId } = req.body;
@@ -25,7 +29,8 @@ const loanRequestController = catchAsyncErrors(async (req, res, next) => {
   // Validate the repaymentTime format (YYYY-MM-DD)
   const repaymentTimeRegex = /^\d{4}-\d{2}-\d{2}$/;
   if (!repaymentTime.match(repaymentTimeRegex)) {
-    return res.status(400).json({ error: INVALID_DATE_MESSAGE });
+    // return res.status(400).json({ error: INVALID_DATE_MESSAGE });
+    return next(new ErrorHandler(INVALID_DATE_MESSAGE, 403));
   }
 
   const newLoan = new LoanRequest({
@@ -42,33 +47,46 @@ const loanRequestController = catchAsyncErrors(async (req, res, next) => {
     if (savedLoan) {
       res.status(200).json({ message: "Loan Request created successfully." });
     } else {
-      res.status(400).json({ message: "Loan Request creation failed." });
+      // res.status(400).json({ message: "Loan Request creation failed." });
+      return next(new ErrorHandler("Loan Request creation failed.", 403));
     }
   } catch (error) {
-    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+    // res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+    return next(new ErrorHandler(DEFAULT_ERROR_MESSAGE, 500));
   }
 });
 
+/**
+ * @route PATCH /peerloan/accept/
+ */
 const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
   const { loanRequestId, borrowerId, lenderId, decision, amount } = req.body;
   // Decision can be "accepted" or "rejected"
 
   if (borrowerId == lenderId) {
-    return res.status(400).json({ message: "You can't borrow from yourself." });
+    // return res.status(400).json({ message: "You can't borrow from yourself." });
+    return next(new ErrorHandler("You can't borrow from yourself.", 403));
   }
 
   if (decision.toLowerCase() !== "accepted") {
-    return res.status(400).json({ message: "Loan not accepted." });
+    // return res.status(400).json({ message: "Loan not accepted." });
+    return next(new ErrorHandler("Loan not accepted", 403));
   }
   try {
     const loanRequest = await LoanRequest.findById(loanRequestId);
+    if (loanRequest.desiredAmount != Number(amount)) {
+      // return res.status(400).json({ message: "Amount is not equal" });
+      return next(new ErrorHandler("Amounts are not equal", 403));
+    }
 
     if (!loanRequest) {
-      return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
+      // return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
+      return next(new ErrorHandler(LOAN_NOT_FOUND_MESSAGE, 403));
     }
 
     if (loanRequest.status != "Pending") {
-      return res.status(400).json({ message: "Loan is unavaliable." });
+      // return res.status(400).json({ message: "Loan is unavaliable." });
+      return next(new ErrorHandler("Loan is unavaliable", 403));
     }
 
     const currentDate = new Date();
@@ -83,7 +101,8 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
       userId: lenderId,
     });
     if (Number(amount) > lenderAccountDetail.balance) {
-      return res.status(400).json({ message: "Unsufficient account balance" });
+      // return res.status(400).json({ message: "Unsufficient account balance" });
+      return next(new ErrorHandler("Insufficient account balance", 403));
     }
     lenderAccountDetail.balance -= Number(amount);
     lenderAccountDetail.save();
@@ -97,14 +116,15 @@ const loanAcceptController = catchAsyncErrors(async (req, res, next) => {
     loanRequest.lenderAcceptDate = formattedDate;
     loanRequest.status = "Accepted";
     await loanRequest.save();
-
-    //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan accepted." });
   } catch (error) {
-    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+    return next(new ErrorHandler(DEFAULT_ERROR_MESSAGE, 500));
   }
 });
 
+/**
+ * @route PATCH /peerloan/viewOneLoan/
+ */
 const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
   const { loanRequestId } = req.body;
   try {
@@ -113,7 +133,8 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
       "firstName lastName email preferredPhoneNumber dateOfBirth gender employmentStatus occupation salutation"
     );
     if (!loanRequest) {
-      return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
+      // return res.status(400).json({ message: LOAN_NOT_FOUND_MESSAGE });
+      return next(new ErrorHandler(LOAN_NOT_FOUND_MESSAGE, 403));
     }
 
     const {
@@ -140,12 +161,13 @@ const viewOneLoanController = catchAsyncErrors(async (req, res, next) => {
       status,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    return next(new ErrorHandler(DEFAULT_ERROR_MESSAGE, 500));
   }
 });
 
+/**
+ * @route PATCH /peerloan/viewManyLoans/
+ */
 const viewManyLoanController = catchAsyncErrors(async (req, res, next) => {
   let { loanNumber } = req.body;
 
@@ -162,21 +184,27 @@ const viewManyLoanController = catchAsyncErrors(async (req, res, next) => {
       }
       res.status(200).json({ message: manyLoanRequests });
     } else {
-      res.status(400).json({ message: "Invalid loanNumber" });
+      // res.status(400).json({ message: "Invalid loanNumber" });
+      return next(new ErrorHandler("Invalid loan number", 403));
     }
   } catch (error) {
-    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+    return next(new ErrorHandler(DEFAULT_ERROR_MESSAGE, 500));
   }
 });
 
+/**
+ * @route PATCH /peerloan/viewFilteredLoans/
+ */
 const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
   const { maxPrice, loanNumber } = req.body;
 
   if (isNaN(maxPrice)) {
-    return res.status(400).json({ message: "Invalid maxPrice" });
+    // return res.status(400).json({ message: "Invalid maxPrice" });
+    return next(new ErrorHandler("Invalid max price", 403));
   }
   if (isNaN(loanNumber)) {
-    return res.status(400).json({ message: "Invalid loanNumber" });
+    // return res.status(400).json({ message: "Invalid loanNumber" });
+    return next(new ErrorHandler("Invalid loan number", 403));
   }
 
   let filteredLoanRequests = [];
@@ -196,38 +224,43 @@ const viewFilterLoanController = catchAsyncErrors(async (req, res, next) => {
     }
     res.status(200).json({ message: filteredLoanRequests });
   } catch (error) {
-    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+    return next(new ErrorHandler(DEFAULT_ERROR_MESSAGE, 500));
   }
 });
 
+/**
+ * @route PATCH /peerloan/payLoan/
+ */
 const payLoanController = catchAsyncErrors(async (req, res, next) => {
   const { loanRequestId, borrowerId, lenderId, amount } = req.body;
-  //debit money from borrower account and pay the lender
   try {
-    //debit money from lender and credit the borrower
-    const borrowerAccountDetail = await AccountDetail.findOne({
-      userId: lenderId,
-    });
-    if (Number(amount) > borrowerAccountDetail.balance) {
-      return res.status(400).json({ message: "Unsufficient account balance" });
+    const loanRequest = await LoanRequest.findById(loanRequestId);
+    if (loanRequest.desiredAmount != Number(amount)) {
+      // return res.status(400).json({ message: "Pay amount borrowed." });
+      return next(new ErrorHandler("Pay amount borrowed.", 403));
     }
-    borrowerAccountDetail.balance -= Number(amount);
-    borrowerAccountDetail.save();
-    const lenderAccountDetail = await AccountDetail.findOne({
+    const borrowerAccountDetail = await AccountDetail.findOne({
       userId: borrowerId,
     });
-    lenderAccountDetail.balance += Number(amount);
-    lenderAccountDetail.save();
 
-    const loanRequest = await LoanRequest.findById(loanRequestId);
-    loanRequest.desiredAmount = 0;
+    if (Number(amount) > borrowerAccountDetail.balance) {
+      // return res.status(400).json({ message: "Unsufficient account balance" });
+      return next(new ErrorHandler("Insufficient account balance", 403));
+    }
+    borrowerAccountDetail.balance -= Number(amount);
+    await borrowerAccountDetail.save();
+    const lenderAccountDetail = await AccountDetail.findOne({
+      userId: lenderId,
+    });
+    lenderAccountDetail.balance += Number(amount);
+    await lenderAccountDetail.save();
+
     loanRequest.status = "Closed";
     await loanRequest.save();
 
-    //connect FCMB api to enable transfer from one account to the other
     res.status(200).json({ message: "Loan paid successfully." });
   } catch (error) {
-    res.status(500).json({ message: DEFAULT_ERROR_MESSAGE });
+    return next(new ErrorHandler(DEFAULT_ERROR_MESSAGE, 500));
   }
 });
 
@@ -237,4 +270,5 @@ module.exports = {
   viewOneLoanController,
   viewManyLoanController,
   viewFilterLoanController,
+  payLoanController,
 };
