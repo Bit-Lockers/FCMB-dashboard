@@ -2,6 +2,7 @@ import "./loanDetail.css";
 import { Avatar, Box, Button, Grid, Paper, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import Clear from "@mui/icons-material/Clear";
+import MonitorLoan from "./MonitorLoan";
 
 const keys1 = [
   "Status",
@@ -75,7 +76,7 @@ const LoanDetail = () => {
       >
         Request Details
       </Typography>
-      <Grid container spacing={4} sx={{ margin: "5px" }}>
+      <Grid container spacing={4} sx={{ margin: "5px" }} gutterBottom>
         <Grid
           item
           sx={{
@@ -187,6 +188,7 @@ const LoanDetail = () => {
           </Box>
         </Grid>
       </Grid>
+      <MonitorLoan />
     </Paper>
   );
 };
