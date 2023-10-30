@@ -73,7 +73,7 @@ The Loan Request System utilizes the following technologies:
 
 ## 5. Project Structure
 
-The project is structured into separate folders for the frontend and backend, each with its own set of files. Here's a basic overview of the project structure:
+The project is structured into separate folders for the frontend and backend, each with its own set of files. Here's a basic overview of the project structure:  
 peerpocket/
 │
 ├── client/ # React frontend  
