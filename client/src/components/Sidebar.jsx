@@ -60,7 +60,7 @@ function Sidebar() {
 
           <a>Lend</a>
         </li>
-        <li className="item">
+        <li className="item" onClick={() => navigate("/myLoan")}>
           <IconButton>
             <PaymentIcon />
           </IconButton>

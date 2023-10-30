@@ -12,6 +12,10 @@ import axios from "axios";
 import { authState } from "./context/authContext";
 import LoanDetail from "./pages/loanRequestDetail/LoanDetail";
 import LoanDailD from "./pages/loanRequestDetail/LoanDailD";
+import DisputeChatbot from "./pages/chatBot/DisputeChatBot";
+import MyLoanDashboard from "./pages/myLoan/MyLoanDashboard";
+// import NewLoanRequest from "./pages/myLoan/NewLoanRequest";
+// import ChatBot from "./pages/chatBot/ChatBot";
 // import Setting from "./pages/setting/Setting";
 // import VerticalTabs from "./pages/profile/Profile";
 // import MyLoanDashboard from "./pages/myLoan/MyLoanDashboard";
@@ -44,10 +48,13 @@ function App() {
         element={user ? <Navigate to="/dashboard" /> : <Registration />}
       />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/loan" element={<NewLoanRequest />} />
+      {/* <Route path="/loan" element={<NewLoanRequest />} /> */}
       <Route path="/loanRequest" element={<LoanRequestsD />} />
+      <Route path="/createLoanReq" element={<LoanRequestsD />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/loanDetail" element={<LoanDailD />} />
+      <Route path="/loan" element={<DisputeChatbot />} />
+      <Route path="/myLoan" element={<MyLoanDashboard />} />
     </Routes>
   );
 }
