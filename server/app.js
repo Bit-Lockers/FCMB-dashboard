@@ -17,6 +17,7 @@ const io = require("socket.io")(server, {
 //routes
 const authRoute = require("./routes/authRoute");
 const loanRoute = require("./routes/loanRoute");
+const transferRoute = require("./routes/transferRoute");
 
 //Handle Uncaught exceptions
 process.on("uncaughtException", (err) => {
@@ -33,6 +34,7 @@ app.use(errorMiddleware);
 //app routes goes here guys
 app.use("/api/v1", authRoute);
 app.use("/peerloan", loanRoute);
+app.use("/transfer", transferRoute);
 
 //simple logic for open channel messaging
 let users = [];
