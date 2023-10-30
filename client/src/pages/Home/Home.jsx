@@ -96,7 +96,7 @@ const Home = () => {
               fontWeight: "500",
               letterSpacing: 0.2,
               wordWrap: "break-word",
-              textAlign: "center"
+              textAlign: "center",
             }}
           >
             Sign in to continue to your dashboard
