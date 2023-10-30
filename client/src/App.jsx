@@ -40,25 +40,39 @@ function App() {
     })();
   }, []);
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={user ? <Navigate to="/dashboard" /> : <Home />}
-      />
-      <Route
-        path="/register"
-        element={user ? <Navigate to="/dashboard" /> : <Registration />}
-      />
-      <Route path="/dashboard" element={<Dashboard />} />
-      {/* <Route path="/loan" element={<NewLoanRequest />} /> */}
-      <Route path="/loanRequest" element={<LoanRequestsD />} />
-      <Route path="/createLoanReq" element={<LoanRequestsD />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/loanDetail" element={<LoanDailD />} />
-      <Route path="/loan" element={<DisputeChatbot />} />
-      <Route path="/myLoan" element={<MyLoanD />} />
-      <Route path="/newLoan" element={<NewLoanD />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={user ? <Navigate to="/dashboard" /> : <Home />}
+        />
+        <Route
+          path="/register"
+          element={user ? <Navigate to="/dashboard" /> : <Registration />}
+        />
+        <Route path="/dashboard" element={<Dashboard />} />
+        {/* <Route path="/loan" element={<NewLoanRequest />} /> */}
+        <Route path="/loanRequest" element={<LoanRequestsD />} />
+        <Route path="/createLoanReq" element={<LoanRequestsD />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/loanDetail" element={<LoanDailD />} />
+        <Route path="/loan" element={<DisputeChatbot />} />
+        <Route path="/myLoan" element={<MyLoanD />} />
+        <Route path="/newLoan" element={<NewLoanD />} />
+      </Routes>
+      <div
+        style={{
+          margin: "20px",
+          position: "absolute",
+          bottom: "0",
+          right: "0",
+          zIndex: "999",
+          background: "white",
+        }}
+      >
+        <DisputeChatbot />
+      </div>
+    </>
   );
 }
 
