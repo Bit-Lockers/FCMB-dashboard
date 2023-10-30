@@ -45,6 +45,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 //app routes goes here guys
 app.use("/api/v1", authRoute);
 app.use("api/v1/peerloan", loanRoute);
+app.use("/api/v1/transfer", transferRoute)
 
 app.use(errorMiddleware);
 
