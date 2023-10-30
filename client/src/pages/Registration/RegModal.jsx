@@ -38,7 +38,7 @@ export default function RegModal({ open, setOpen, handleOpen, handleClose }) {
             }}
           >
             <CircularProgress sx={{ color: "#0C3397" }} size={40} />
-            <Typography>Creting Account ...</Typography>
+            <Typography>Creating Account ...</Typography>
           </Stack>
         </Box>
       </Modal>

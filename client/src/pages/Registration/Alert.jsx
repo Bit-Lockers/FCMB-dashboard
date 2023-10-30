@@ -9,7 +9,7 @@ export default function PositionedSnackbar({ open, message, handleClose }) {
   useEffect(() => {
     setTimeout(() => {
       handleClose();
-    }, 5000);
+    }, 10000);
   });
   return (
     <Box sx={{ width: 500 }}>
