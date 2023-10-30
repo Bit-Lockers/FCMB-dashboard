@@ -1,24 +1,31 @@
-import { useState } from "react";
-import "./home.css";
-import "../Registration/Registration.css";
-import logo from "../../assets/logo.svg";
-import { Stack, Typography } from "@mui/material";
-import Button from "../../components/Button";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { authState } from "../../context/authContext";
-import RegModal from "../Registration/RegModal";
-import PositionedSnackbar from "../Registration/Alert";
-const Home = () => {
-  const { setUser } = authState();
+import * as React from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+function SignIn() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   const [message, setMessage] = useState();
   const [alert, setAlert] = useState(false);
   const [open, setOpen] = useState(false);
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -30,130 +37,106 @@ const Home = () => {
   const loginUser = async () => {
     try {
       setOpen(true);
-      const res = await axios.post(
-        `http://localhost:5000/api/v1/login`,
-        userData,
-        {
-          withCredentials: true,
-          credentials: "include",
-        }
-      );
-      setUser(res?.data?.user);
+      const res = await axios.post('http://localhost:5000/api/v1/login', userData, {
+        withCredentials: true,
+        credentials: 'include',
+      });
+      // setUser(res?.data?.user); // If you need to set user data (optional)
       setOpen(false);
-      navigate("/dashboard");
+      navigate('/dashboard'); // Redirect to the dashboard
     } catch (error) {
       setOpen(false);
       setMessage(error?.response?.data?.errMessage);
       setAlert(true);
     }
   };
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleAClose = () => {
     setAlert(false);
   };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    loginUser(); // Call the loginUser function on form submission
+  };
+
+  const theme = createTheme();
+
   return (
-    <div className="home-container">
-      <div className="sign-inn" style={{ width: "30%", height: "70%" }}>
-        <div>
-          <img
-            style={{
-              width: "200px",
-              height: "100px",
-            }}
-            src={logo}
-            alt="logo"
-          />
-        </div>
-        <div
-          className="dflex1"
-          style={{
-            width: 294,
-            height: 70,
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            display: "inline-flex",
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
-          <div
-            style={{
-              color: "#040C21",
-              fontSize: 32,
-              fontFamily: "Graphik",
-              fontWeight: "500",
-              letterSpacing: 0.2,
-              wordWrap: "break-word",
-            }}
-          >
-            Welcome back!
-          </div>
-          <div
-            style={{
-              color: "#091C33",
-              fontSize: 16,
-              fontFamily: "Inter",
-              fontWeight: "500",
-              letterSpacing: 0.2,
-              wordWrap: "break-word",
-            }}
-          >
-            Sign in to continue to your dashboard
-          </div>
-        </div>
-
-        <div className="form-container">
-          <div className="form-group form-group-single ">
-            <label htmlFor="email" className="label">
-              Email
-            </label>
-            <input
-              type="email"
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
               id="email"
+              label="Email Address"
               name="email"
+              autoComplete="email"
+              autoFocus
               value={userData.email}
               onChange={handleChange}
-              placeholder="Enter Your email"
             />
-          </div>
-          <div className="form-group form-group-single">
-            <label htmlFor="password" className="label">
-              Password
-            </label>
-            <input
-              value={userData.password}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
               type="password"
               id="password"
-              name="password"
-              placeholder="Enter Password"
+              autoComplete="current-password"
+              value={userData.password}
               onChange={handleChange}
             />
-          </div>
-        </div>
-        <div style={{ width: "90%" }}>
-          <Button text="Sign In" onClick={() => loginUser()} />
-        </div>
-        <Typography className="typo">
-          Don't have an account?{" "}
-          <span className="sign-in" onClick={() => navigate("/register")}>
-            Sign up
-          </span>
-        </Typography>
-        <RegModal
-          open={open}
-          close={close}
-          handleClose={handleClose}
-          handleOpen={handleOpen}
-          message="Signing In ..."
-        />
-        <PositionedSnackbar
-          open={alert}
-          message={message}
-          handleClose={handleAClose}
-        />
-      </div>
-    </div>
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item>
+                <Link href="/register" variant="body2">
+                  Don't have an account? Sign Up
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
-};
+}
 
-export default Home;
+export default SignIn;

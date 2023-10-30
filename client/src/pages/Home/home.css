@@ -17,3 +17,11 @@
   border-radius: 16px;
   background: #fff;
 }
+
+
+@media (max-width: 780px) {
+  .sign-inn {
+    background-color: transparent;
+    border: none;
+  }
+}
