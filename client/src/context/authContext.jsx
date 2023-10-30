@@ -6,6 +6,29 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [loading, setLoading] = useState(false);
 
+  const [data, setData] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    bvnMobileNumber: "",
+    preferredMobileNumber: "",
+    dateOfBirth: "",
+    gender: "",
+    bvn: "",
+    motherMaidenName: "",
+    maritalStatus: "",
+    occupation: "",
+    employmentStatus: "",
+    salutation: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+  });
+
   //function to register user
   const registerUser = async (upload) => {
     try {
@@ -19,7 +42,9 @@ const AuthProvider = ({ children }) => {
     }
   };
   return (
-    <AuthContext.Provider value={(user, setUser, registerUser, loading)}>
+    <AuthContext.Provider
+      value={(user, setUser, registerUser, loading, data, setData)}
+    >
       {children}
     </AuthContext.Provider>
   );

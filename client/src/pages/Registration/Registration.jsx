@@ -5,6 +5,7 @@ import Button from "../../components/Button";
 import logo from "../../assets/logo.svg";
 import CheckIcon from "@mui/icons-material/Check";
 import { authState } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
 const fullCenterALign = {
   display: "flex",
   alignItems: "center",
@@ -13,7 +14,8 @@ const fullCenterALign = {
 
 const Registration = () => {
   const [index, setIndex] = useState(0);
-  const { user, setUser } = authState();
+  const { user, setUser, data, setData, loading, registerUser } = authState();
+  const navigate = useNavigate();
   return (
     <Stack direction="row" className="container">
       {/* left side */}
@@ -68,7 +70,11 @@ const Registration = () => {
                   borderLeft: "1px dotted black",
                 }}
               ></div>
-              <li style={{ position: "relative" }} onClick={() => setIndex(1)}>
+              <li
+                className="li"
+                style={{ position: "relative" }}
+                onClick={() => setIndex(1)}
+              >
                 {index > 1 ? (
                   <CheckIcon
                     className="icon"
@@ -102,7 +108,11 @@ const Registration = () => {
                   borderLeft: "1px dotted black",
                 }}
               ></div>
-              <li style={{ position: "relative" }} onClick={() => setIndex(2)}>
+              <li
+                className="li"
+                style={{ position: "relative" }}
+                onClick={() => setIndex(2)}
+              >
                 {index > 2 ? (
                   <CheckIcon
                     className="icon"
@@ -170,10 +180,20 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="title"
-                  name="title"
+                  id="salutation"
+                  name="salutation"
                   placeholder="Mr/Mrs/Miss"
                 />
+              </div>
+              <div className="form-group">
+                <label htmlFor="salutation" className="label">
+                  Title
+                </label>
+                <select id="category" name="category" className="select">
+                  <option value="optnion1">Mr</option>
+                  <option value="option2">Mrs</option>
+                  <option value="option3">Miss</option>
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="first-name" className="label">
@@ -276,7 +296,6 @@ const Registration = () => {
             sx={{
               width: "70%",
               height: "100%",
-              border: "1px solid black",
             }}
             className="page-1"
           >
@@ -495,137 +514,13 @@ const Registration = () => {
               </Stack>
 
               <div style={{ width: "100%" }} className="continue">
-                <Button text="continue" />
+                <Button
+                  text="continue"
+                  onClick={() => navigate("/dashboard")}
+                />
               </div>
             </Box>
 
-            <Typography className="typo">
-              Already have an account? <span className="sign-in">Sign In</span>
-            </Typography>
-          </Box>
-        )}
-        {index === 3 && (
-          <Box
-            sx={{
-              width: "70%",
-              height: "100%",
-            }}
-            className="page-1"
-          >
-            <Box className="welcome">
-              <p className="text"> Welcome!</p>
-              <h5 className="text-2">Sign Up to create your account</h5>
-            </Box>
-            <Box
-              className="personal-information"
-              sx={{ width: "90%", padding: "20px 0px 0px 0px" }}
-            >
-              <p className="personal-information"> Personal Information</p>
-              <hr className="line" />
-            </Box>
-            <div className="form-container">
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  placeholder="Mr/Mrs/Miss"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="first-name"
-                  name="first-name"
-                  placeholder="John "
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="last-name" className="label">
-                  Middle Name
-                </label>
-                <input
-                  type="text"
-                  id="middle-name"
-                  name="middle-name"
-                  placeholder="Doe"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="last-name" className="label">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="last-name"
-                  name="last-name"
-                  placeholder="Mark"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="category" className="label">
-                  Gender
-                </label>
-                <select id="category" name="category" className="select">
-                  <option value="option1">Male</option>
-                  <option value="option2">Female</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="date" className="label">
-                  Date
-                </label>
-                <input type="date" id="date" name="date" />
-              </div>
-            </div>
-            <Box className="personal-information" sx={{ width: "90%" }}>
-              <p className="personal-information"> Contact Information</p>
-              <hr className="line" />
-            </Box>
-            <div className="form-container">
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  BVN Mobiel Number
-                </label>
-                <input
-                  type="text"
-                  id="bvn_mobile_number"
-                  name="bvn_mobile_number"
-                  placeholder="Enter Mobile Number"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  Preferred Mobile Number
-                </label>
-                <input
-                  type="text"
-                  id="preferred_mobile_number"
-                  name="bvn_mobile_number"
-                  placeholder="Enter Mobiie Number"
-                />
-              </div>
-              <div className="form-group-single form-group">
-                <label htmlFor="last-name" className="label">
-                  Email Address
-                </label>
-                <input
-                  type="text"
-                  id="email_address"
-                  name="email_address"
-                  placeholder="Enter Email Address"
-                />
-              </div>
-            </div>
-            <div style={{ width: "90%" }} className="continue">
-              <Button text="continue" />
-            </div>
             <Typography className="typo">
               Already have an account? <span className="sign-in">Sign In</span>
             </Typography>
