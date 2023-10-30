@@ -5,13 +5,15 @@ import Registration from "./pages/Registration/Registration";
 import Dashboard from "./pages/dashboard/Dashboard";
 import MyLoanDashboard from "./pages/myLoan/MyLoanDashboard";
 import LoanRequests from "./pages/loanRequests/LoanRequests";
+import SendMoney from "./pages/sendMoney/SendMoney";
+// import PaymentHistory from "./pages/paymentHistory/PaymentHistory";
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/register" element={<Registration />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/loan" element={<LoanRequests />} />
+      <Route path="/loan" element={<SendMoney />} />
     </Routes>
   );
 }
