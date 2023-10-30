@@ -14,6 +14,7 @@ import LayersIcon from "@mui/icons-material/Layers";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import LoanRequests from "../loanRequests/LoanRequests";
+import { authState } from "../../context/authContext";
 const style = {
   position: "absolute",
   top: "50%",
@@ -27,15 +28,11 @@ const style = {
   p: 4,
 };
 function Dashboard() {
+  const { user } = authState();
   const [state, setState] = useState(true);
   const [navbar, setNavbar] = useState(true);
   const [open, setOpen] = useState(false);
-  const [openM, setOpenM] = useState(false);
-  const [orderId, setOrderId] = useState();
-
-  const handleOpenM = () => setOpenM(true);
-  const handleCloseM = () => setOpenM(false);
-
+  console.log(user);
   const toggle = () => {
     setState((prev) => !prev);
   };
@@ -121,7 +118,10 @@ function Dashboard() {
                 </Box>
 
                 <div className="introduction">
-                  <p className="welcome-message"> Good evening, Bright</p>
+                  <p className="welcome-message">
+                    {" "}
+                    Good evening, {user?.firstName}
+                  </p>
                   <p className="welcome-info">
                     {" "}
                     Your financial dreams are just a click away!
@@ -137,7 +137,8 @@ function Dashboard() {
                         <RemoveRedEyeIcon />
                       </Stack>
                       <Typography className="big-bal" sx={{ fontSize: "28px" }}>
-                        &#8358;0<span className="small-span">.00</span>{" "}
+                        &#8358;{user?.balance}
+                        <span className="small-span">.00</span>{" "}
                       </Typography>
                     </Box>
                   </Box>

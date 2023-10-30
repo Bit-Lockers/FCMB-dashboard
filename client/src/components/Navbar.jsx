@@ -32,8 +32,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import "../app.scss";
 import logo from "../assets/logo.svg";
+import { authState } from "../context/authContext";
 
 function Navbar({ navbar, setNavbar, active, background, border }) {
+  const { user } = authState();
   const [open, setOpen] = useState(false);
   const [Drawer, setDrawer] = React.useState(false);
   const [openSearch, setOpenSearch] = useState(false);
@@ -224,12 +226,14 @@ function Navbar({ navbar, setNavbar, active, background, border }) {
           </IconButton>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Avatar sx={{ width: "30px", height: "30px", margin: "0px 5px" }} />
-            <Typography
-              className="name"
-              sx={{ display: { md: "block", xs: "none" } }}
-            >
-              Agu Bright
-            </Typography>
+            {user && (
+              <Typography
+                className="name"
+                sx={{ display: { md: "block", xs: "none" } }}
+              >
+                {`${user?.firstName} ${user?.lastName}`}
+              </Typography>
+            )}
           </Box>
         </Stack>
       </Stack>
