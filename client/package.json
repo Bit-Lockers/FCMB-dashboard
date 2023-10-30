@@ -17,11 +17,12 @@
     "@mui/styled-engine-sc": "^6.0.0-alpha.3",
     "@mui/x-date-pickers": "^6.17.0",
     "axios": "^1.6.0",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
-    "socket.io-client": "^4.7.2",
     "react-spinners": "^0.13.8",
+    "socket.io-client": "^4.7.2",
     "styled-components": "^6.1.0"
   },
   "devDependencies": {
