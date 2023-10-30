@@ -182,10 +182,23 @@ const logoutUser = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// GET_LOGGEDIN_USER_PROFILE => api/v1/user/me
+const getUserDetails = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return next(new ErrorHandler("no user found", 404));
+  }
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
 module.exports = {
   registerUser,
   loginUser,
   getAllUsers,
   getOneUser,
   logoutUser,
+  getUserDetails,
 };

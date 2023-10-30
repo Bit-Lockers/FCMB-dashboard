@@ -27,6 +27,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import "./navbar.css";
 function Sidebar() {
+  const navigate = useNavigate();
   return (
     <>
       <ul
@@ -40,6 +41,7 @@ function Sidebar() {
         }}
       >
         <li
+          onClick={() => navigate("/dashboard")}
           className="item"
           style={{
             background: "rgba(236, 255, 250, 0.64)",
@@ -51,7 +53,7 @@ function Sidebar() {
           </IconButton>
           <a>Dashboard</a>
         </li>
-        <li className="item">
+        <li className="item" onClick={() => navigate("/loanRequest")}>
           <IconButton>
             <VolunteerActivismIcon />
           </IconButton>

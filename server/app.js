@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./db/connectDb");
+const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT;
 const errorMiddleware = require("./middleware/error");
 const bodyParser = require("body-parser");
@@ -30,14 +31,19 @@ app.use(function (req, res, next) {
 });
 
 //middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 app.use(express.json());
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(cookieParser());
 
 //app routes goes here guys
 app.use("/api/v1", authRoute);
 app.use("api/v1/peerloan", loanRoute);
-app.use("/api/v1/transfer", transferRoute)
+app.use("/api/v1/transfer", transferRoute);
 
 app.use(errorMiddleware);
 
