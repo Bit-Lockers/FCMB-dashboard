@@ -5,9 +5,49 @@ import logo from "../../assets/logo.svg";
 import { Stack, Typography } from "@mui/material";
 import Button from "../../components/Button";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { authState } from "../../context/authContext";
+import RegModal from "../Registration/RegModal";
+import PositionedSnackbar from "../Registration/Alert";
 const Home = () => {
+  const { setUser } = authState();
   const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+  });
+  const [message, setMessage] = useState();
+  const [alert, setAlert] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setUserData((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const loginUser = async () => {
+    try {
+      setOpen(true);
+      const res = await axios.post(
+        `http://localhost:5000/api/v1/login`,
+        userData
+      );
+      setUser(res?.data?.user);
+      setOpen(false);
+      navigate("/dashboard");
+    } catch (error) {
+      setOpen(false);
+      setMessage(error?.response?.data?.errMessage);
+      setAlert(true);
+    }
+  };
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleAClose = () => {
+    setAlert(false);
+  };
   return (
     <div className="home-container">
       <div className="sign-inn" style={{ width: "30%", height: "70%" }}>
@@ -67,6 +107,8 @@ const Home = () => {
               type="email"
               id="email"
               name="email"
+              value={userData.email}
+              onChange={handleChange}
               placeholder="Enter Your email"
             />
           </div>
@@ -75,15 +117,17 @@ const Home = () => {
               Password
             </label>
             <input
+              value={userData.password}
               type="password"
               id="password"
               name="password"
               placeholder="Enter Password"
+              onChange={handleChange}
             />
           </div>
         </div>
         <div style={{ width: "90%" }}>
-          <Button text="continue" />
+          <Button text="Sign In" onClick={() => loginUser()} />
         </div>
         <Typography className="typo">
           Don't have an account?{" "}
@@ -91,6 +135,18 @@ const Home = () => {
             Sign up
           </span>
         </Typography>
+        <RegModal
+          open={open}
+          close={close}
+          handleClose={handleClose}
+          handleOpen={handleOpen}
+          message="Signing In ..."
+        />
+        <PositionedSnackbar
+          open={alert}
+          message={message}
+          handleClose={handleAClose}
+        />
       </div>
     </div>
   );

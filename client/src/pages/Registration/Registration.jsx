@@ -812,6 +812,7 @@ const Registration = () => {
           close={close}
           handleClose={handleClose}
           handleOpen={handleOpen}
+          message="Creating Account ..."
         />
         <PositionedSnackbar
           open={alert}

@@ -37,8 +37,8 @@ const authSchema = new mongoose.Schema({
       true,
       "Please provide the phone number tied to your BVN to open an account",
     ],
-    unique: [true, "Please provide a unique phone number to open an account"],
-    maxlength: [11, "Your phone number should not exceed 11 characters"],
+    // unique: [true, "Please provide a unique phone number to open an account"],
+    // maxlength: [11, "Your phone number should not exceed 11 characters"],
   },
   preferredMobileNumber: {
     type: String,
@@ -56,7 +56,7 @@ const authSchema = new mongoose.Schema({
   bvn: {
     type: Number,
     required: [true, "Please provide a BVN for verification"],
-    unique: true,
+    // unique: true,
   },
   motherMaidenName: {
     type: String,
