@@ -1,0 +1,25 @@
+.overview {
+  color: var(--secondary-text, #091c33);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.2px;
+}
+
+.name {
+  color: var(--secondary-text, #091c33);
+  font-feature-settings: "clig" off, "liga" off;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.item {
+  cursor: pointer;
+  padding: 10px 0px 10px 5px;
+}

@@ -1,4 +1,4 @@
-import "./LoanRequest.css"
+import "./LoanRequests.css";
 import { useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -9,51 +9,50 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { Box, Typography } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import DownloadIcon from '@mui/icons-material/Download';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import SearchIcon from "@mui/icons-material/Search";
+import { styled, alpha } from "@mui/material/styles";
+import InputBase from "@mui/material/InputBase";
+import DownloadIcon from "@mui/icons-material/Download";
+import FilterListIcon from "@mui/icons-material/FilterList";
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
+const Search = styled("div")(({ theme }) => ({
+  position: "relative",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: "100%",
+  [theme.breakpoints.up("sm")]: {
+    marginLeft: theme.spacing(3),
+    width: "auto",
+  },
+}));
+
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: "100%",
+  position: "absolute",
+  pointerEvents: "none",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "inherit",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
     },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(3),
-      width: 'auto',
-    },
-  }));
-
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
-    },
-  }));
-
+  },
+}));
 
 const columns = [
   { id: "beneficiary", label: "Beneficiary", width: 150 },
@@ -86,40 +85,242 @@ const columns = [
   },
 ];
 
-function createData(beneficiary, loanType, desiredAmount, purpose, interestRate, repaymentDate, action) {
-  return {beneficiary, loanType, desiredAmount, purpose, interestRate, repaymentDate, action};
+function createData(
+  beneficiary,
+  loanType,
+  desiredAmount,
+  purpose,
+  interestRate,
+  repaymentDate,
+  action
+) {
+  return {
+    beneficiary,
+    loanType,
+    desiredAmount,
+    purpose,
+    interestRate,
+    repaymentDate,
+    action,
+  };
 }
 
 const request = (link) => {
-    return (
-        <a href={link} style={{textDecoration: "none", color: "#0C3397"}}>View</a>
-    )
-}
+  return (
+    <a href={link} style={{ textDecoration: "none", color: "#0C3397" }}>
+      View
+    </a>
+  );
+};
 
 const rows = [
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Bamidele precious", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
-  createData("Agu Bright", "Short-term", 400000, "House rent", 10, "27-10-2020", request("https://google.com/")),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Bamidele precious",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
+  createData(
+    "Agu Bright",
+    "Short-term",
+    400000,
+    "House rent",
+    10,
+    "27-10-2020",
+    request("https://google.com/")
+  ),
 ];
 
 const LoanRequests = () => {
@@ -139,24 +340,34 @@ const LoanRequests = () => {
     <Paper sx={{ width: "100%", overflow: "hidden", padding: "20px" }}>
       <Box className="heading">
         <Box>
-            <Typography variant="h2">Loan Requests</Typography>
+          <Typography variant="h2">Loan Requests</Typography>
         </Box>
-        <Box sx={{display: "flex"}}>
-        <Search className="searchbar">
+        <Box sx={{ display: "flex" }}>
+          <Search className="searchbar">
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+              inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Box sx={{display: "flex", padding: "10px 20px", cursor: "pointer"}}>
-          <DownloadIcon style={{color: "#002E6E"}}/>
-          <Typography>Export</Typography>
+          <Box
+            sx={{ display: "flex", padding: "10px 20px", cursor: "pointer" }}
+          >
+            <DownloadIcon style={{ color: "#002E6E" }} />
+            <Typography>Export</Typography>
           </Box>
-          <Box sx={{display: "flex", padding: "10px 20px", backgroundColor: "#F0F4FF", borderRadius: "5px", cursor: "pointer"}}>
-            <FilterListIcon style={{color: "#002E6E"}}/>
+          <Box
+            sx={{
+              display: "flex",
+              padding: "10px 20px",
+              backgroundColor: "#F0F4FF",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            <FilterListIcon style={{ color: "#002E6E" }} />
             <Typography>Filter</Typography>
           </Box>
         </Box>
@@ -170,7 +381,11 @@ const LoanRequests = () => {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ width: column.width, height: "60px", color: "#091C33" }}
+                  style={{
+                    width: column.width,
+                    height: "60px",
+                    color: "#091C33",
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -182,7 +397,13 @@ const LoanRequests = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code} style={{height: "76px"}}>
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.code}
+                    style={{ height: "76px" }}
+                  >
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -199,16 +420,16 @@ const LoanRequests = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{display: "flex", justifyContent: "center"}}>
-      <TablePagination
-        rowsPerPageOptions={[10]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <TablePagination
+          rowsPerPageOptions={[10]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Box>
     </Paper>
   );

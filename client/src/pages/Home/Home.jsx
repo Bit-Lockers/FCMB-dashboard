@@ -15,7 +15,7 @@ const Home = () => {
           <img
             style={{
               width: "200px",
-              height: "150px",
+              height: "100px",
             }}
             src={logo}
             alt="logo"
@@ -29,7 +29,6 @@ const Home = () => {
             flexDirection: "column",
             justifyContent: "flex-start",
             alignItems: "center",
-            gap: 16,
             display: "inline-flex",
           }}
         >

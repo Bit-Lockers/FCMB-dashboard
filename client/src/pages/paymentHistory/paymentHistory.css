@@ -1,0 +1,42 @@
+* {
+    box-sizing: border-box;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
+.searchbar {
+    border: 1px solid #002E6E;
+}
+
+.heading h2 {
+    color: #181819;
+    font-size: 24px;
+}
+
+.account-balance {
+    width: 343px;
+    height: 135px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: #fff;
+    margin: 0;
+    padding-top: 20px;
+    padding-left: 24px;
+  }
+  .ballance-info {
+    display: flex;
+    width: 146px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .balance {
+    color: var(--secondary-text, #091c33);
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }

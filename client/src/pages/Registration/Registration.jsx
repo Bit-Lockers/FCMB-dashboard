@@ -4,14 +4,127 @@ import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
 import Button from "../../components/Button";
 import logo from "../../assets/logo.svg";
 import CheckIcon from "@mui/icons-material/Check";
-const fullCenterALign = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
+import { useNavigate } from "react-router-dom";
+import { states } from "./states";
+import { authState } from "../../context/authContext";
+import axios from "axios";
+import PositionedSnackbar from "./Alert";
 
+const cities = [
+  "Lagos",
+  "Abuja",
+  "Kano",
+  "Ibadan",
+  "Port Harcourt",
+  "Benin City",
+  "Jos",
+  "Aba",
+  "Ilorin",
+  "Owerri",
+  "Abeokuta",
+  "Onitsha",
+  "Warri",
+  "Uyo",
+  "Kaduna",
+  "Maiduguri",
+  "Enugu",
+  "Zaria",
+  "Sapele",
+  "Calabar",
+];
+import RegModal from "./RegModal";
 const Registration = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [message, setMessage] = useState("");
+  const [alert, setAlert] = useState(false);
+  const handleAClose = () => {
+    setAlert(false);
+  };
   const [index, setIndex] = useState(0);
+  const { user, setUser, data, setData, loading, setLoading } = authState();
+  const navigate = useNavigate();
+  const [index1, setIndex1] = useState({
+    salutation: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    gender: "",
+    dateOfBirth: "",
+    bvnMobileNumber: "",
+    preferredMobileNumber: "",
+    email: "",
+  });
+  const [index2, setIndex2] = useState({
+    motherMaidenName: "",
+    maritalStatus: "",
+    occupation: "",
+    employmentStatus: "",
+    bvn: "",
+    password: "",
+    confirmPassword: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+  });
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    console.log(value);
+    setIndex1((prev) => {
+      console.log(index1);
+      return { ...prev, [name]: value };
+    });
+  };
+  const handleChange2 = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setIndex2((prev) => {
+      console.log(index2);
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleIndex1Change = () => {
+    console.log(index1);
+    setData((prev) => {
+      return { ...prev, ...index1 };
+    });
+    setIndex(1);
+  };
+
+  const handleRegisterUser = async () => {
+    try {
+      setOpen(true);
+      const res = await axios.post(
+        `http://localhost:5000/api/v1/register`,
+        data
+      );
+      setUser(res?.data?.user);
+      setOpen(false);
+      navigate("/dashboard");
+    } catch (error) {
+      setIndex(2);
+      setOpen(false);
+      console.log(error?.response?.data?.errMessage);
+      setMessage(error?.response?.data?.errMessage);
+      setAlert(true);
+    }
+  };
+
+  const handleIndex2Change = async () => {
+    console.log(index2);
+    setData((prev) => {
+      return { ...prev, ...index2 };
+    });
+    setIndex(2);
+  };
+
+  console.log(data);
+
   return (
     <Stack direction="row" className="container">
       {/* left side */}
@@ -27,7 +140,11 @@ const Registration = () => {
           />
           <div className="steps">
             <ul>
-              <li style={{ position: "relative" }} onClick={() => setIndex(0)}>
+              <li
+                className="li"
+                style={{ position: "relative" }}
+                onClick={() => setIndex(0)}
+              >
                 {index > 0 ? (
                   <CheckIcon
                     className="icon"
@@ -62,7 +179,11 @@ const Registration = () => {
                   borderLeft: "1px dotted black",
                 }}
               ></div>
-              <li style={{ position: "relative" }} onClick={() => setIndex(1)}>
+              <li
+                className="li"
+                style={{ position: "relative" }}
+                onClick={() => setIndex(1)}
+              >
                 {index > 1 ? (
                   <CheckIcon
                     className="icon"
@@ -96,7 +217,11 @@ const Registration = () => {
                   borderLeft: "1px dotted black",
                 }}
               ></div>
-              <li style={{ position: "relative" }} onClick={() => setIndex(2)}>
+              <li
+                className="li"
+                style={{ position: "relative" }}
+                onClick={() => setIndex(2)}
+              >
                 {index > 2 ? (
                   <CheckIcon
                     className="icon"
@@ -126,17 +251,96 @@ const Registration = () => {
           </div>
         </div>
       </Box>
-
       {/* Right side  */}
       <Box
         className="right-side"
         sx={{
           display: "flex",
-          alignItems: "start",
+          alignItems: "center",
+          flexDirection: "column",
           justifyContent: "center",
           height: "100vh",
+          padding: { md: "20px", xs: "0px" },
         }}
       >
+        <Box
+          className="mobile-step"
+          sx={{ display: { md: "none", xs: "flex" } }}
+        >
+          <ul className="main-mobile-step">
+            <li
+              className="li"
+              style={{ position: "relative" }}
+              onClick={() => setIndex(0)}
+            >
+              {index > 0 ? (
+                <CheckIcon
+                  className="icon"
+                  sx={{
+                    color: "white",
+                    background: "#2eb796",
+                    width: "50px",
+                    height: "50px",
+                  }}
+                />
+              ) : (
+                "1"
+              )}
+            </li>
+            <div
+              style={{
+                width: "50px",
+                height: "30px",
+                borderBottom: "1px dotted #2eb796",
+              }}
+            ></div>
+            <li
+              className="li"
+              style={{ position: "relative" }}
+              onClick={() => setIndex(1)}
+            >
+              {index > 1 ? (
+                <CheckIcon
+                  className="icon"
+                  sx={{
+                    color: "white",
+                    background: "#2eb796",
+                    width: "50px",
+                    height: "50px",
+                  }}
+                />
+              ) : (
+                "2"
+              )}
+            </li>
+            <div
+              style={{
+                width: "50px",
+                height: "30px",
+                borderBottom: "1px dotted #2eb796",
+              }}
+            ></div>
+            <li
+              className="li"
+              style={{ position: "relative" }}
+              onClick={() => setIndex(2)}
+            >
+              {index > 2 ? (
+                <CheckIcon
+                  className="icon"
+                  sx={{
+                    color: "white",
+                    background: "#2eb796",
+                    width: "50px",
+                    height: "50px",
+                  }}
+                />
+              ) : (
+                "3"
+              )}
+            </li>
+          </ul>
+        </Box>
         {index === 0 && (
           <Box
             sx={{
@@ -159,15 +363,24 @@ const Registration = () => {
             </Box>
             <div className="form-container">
               <div className="form-group">
-                <label htmlFor="first-name" className="label">
+                <label htmlFor="salutation" className="label">
                   Title
                 </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  placeholder="Mr/Mrs/Miss"
-                />
+                <select
+                  id="salutation"
+                  name="salutation"
+                  className="select"
+                  onChange={handleChange}
+                >
+                  <option value="" disabled selected hidden>
+                    Select Title
+                  </option>
+                  <option value="Mr" onClick={(e) => console.log(e)}>
+                    Mr
+                  </option>
+                  <option value="Mrs">Mrs</option>
+                  <option value="Miss">Miss</option>
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="first-name" className="label">
@@ -175,9 +388,11 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="first-name"
-                  name="first-name"
-                  placeholder="John "
+                  id="firstName"
+                  name="firstName"
+                  placeholder="John"
+                  onChange={handleChange}
+                  value={index1.firstName}
                 />
               </div>
               <div className="form-group">
@@ -186,9 +401,11 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="middle-name"
-                  name="middle-name"
+                  id="middleName"
+                  name="middleName"
                   placeholder="Doe"
+                  value={index1.middleName}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group">
@@ -197,25 +414,42 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="last-name"
-                  name="last-name"
+                  id="lastName"
+                  name="lastName"
                   placeholder="Mark"
+                  value={index1.lastName}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group">
                 <label htmlFor="category" className="label">
                   Gender
                 </label>
-                <select id="category" name="category" className="select">
-                  <option value="option1">Male</option>
-                  <option value="option2">Female</option>
+                <select
+                  id="category"
+                  name="gender"
+                  className="select"
+                  value={index1.gender}
+                  onChange={handleChange}
+                >
+                  <option value="" disabled selected hidden>
+                    Select Gender
+                  </option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
               </div>
               <div className="form-group">
                 <label htmlFor="date" className="label">
-                  Date
+                  Date of birth
                 </label>
-                <input type="date" id="date" name="date" />
+                <input
+                  type="date"
+                  id="date"
+                  name="dateOfBirth"
+                  value={index1.dateOfBirth}
+                  onChange={handleChange}
+                />
               </div>
             </div>
             <Box className="personal-information" sx={{ width: "90%" }}>
@@ -229,8 +463,10 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="bvn_mobile_number"
-                  name="bvn_mobile_number"
+                  id="bvnMobileNumber"
+                  name="bvnMobileNumber"
+                  value={index1?.bvnMobileNumber}
+                  onChange={handleChange}
                   placeholder="Enter Mobile Number"
                 />
               </div>
@@ -240,8 +476,10 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="preferred_mobile_number"
-                  name="bvn_mobile_number"
+                  id="preferredMobileNumber"
+                  name="preferredMobileNumber"
+                  value={index1.preferredMobileNumber}
+                  onChange={handleChange}
                   placeholder="Enter Mobiie Number"
                 />
               </div>
@@ -251,14 +489,16 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="email_address"
-                  name="email_address"
+                  id="email"
+                  name="email"
+                  value={index1.email}
+                  onChange={handleChange}
                   placeholder="Enter Email Address"
                 />
               </div>
             </div>
             <div style={{ width: "90%" }} className="continue">
-              <Button text="continue" onClick={() => setIndex(1)} />
+              <Button text="continue" onClick={() => handleIndex1Change()} />
             </div>
             <Typography className="typo">
               Already have an account? <span className="sign-in">Sign In</span>
@@ -270,7 +510,6 @@ const Registration = () => {
             sx={{
               width: "70%",
               height: "100%",
-              border: "1px solid black",
             }}
             className="page-1"
           >
@@ -292,8 +531,10 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="title"
-                  name="Mothers_madien_name"
+                  id="motherMaidenName"
+                  name="motherMaidenName"
+                  value={index2.motherMaidenName}
+                  onChange={handleChange2}
                   placeholder="Enter Name"
                 />
               </div>
@@ -302,12 +543,17 @@ const Registration = () => {
                   Marital Status
                 </label>
                 <select
-                  id="marital_status"
-                  name="marital_status"
+                  id="maritalStatus"
+                  name="maritalStatus"
                   className="select"
+                  onChange={handleChange2}
                 >
-                  <option value="option1">Single</option>
-                  <option value="option2">Married</option>
+                  {" "}
+                  <option value="" disabled selected hidden>
+                    Select Marital Status
+                  </option>
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
                 </select>
               </div>
               <div className="form-group">
@@ -318,6 +564,8 @@ const Registration = () => {
                   type="text"
                   id="occupation"
                   name="occupation"
+                  value={index2.occupation}
+                  onChange={handleChange2}
                   placeholder="Enter Occupation"
                 />
               </div>
@@ -326,12 +574,19 @@ const Registration = () => {
                   Employment Status
                 </label>
                 <select
-                  id="employment_status"
-                  name="employment_status"
+                  id="employmentStatus"
+                  name="employmentStatus"
                   className="select"
+                  value={index2.employmentStatus}
+                  onChange={handleChange2}
                 >
-                  <option value="option1">Student</option>
-                  <option value="option2">Employed</option>
+                  <option value="" disabled selected hidden>
+                    Select Employment Status
+                  </option>
+                  <option value="Student">Student</option>
+                  <option value="Graduate">Graduate</option>
+                  <option value="Employed">Employed</option>
+                  <option value="Self-Employed">Self-Employed</option>
                 </select>
               </div>
 
@@ -343,7 +598,9 @@ const Registration = () => {
                   type="text"
                   id="bvn"
                   name="bvn"
+                  value={index2.bvn}
                   placeholder="Choose a BVN"
+                  onChange={handleChange2}
                 />
               </div>
               <div className="form-group">
@@ -354,7 +611,22 @@ const Registration = () => {
                   type="text"
                   id="password"
                   name="password"
-                  placeholder="Choose a password"
+                  value={index2.password}
+                  placeholder="Enter password"
+                  onChange={handleChange2}
+                />
+              </div>
+              <div className=" form-group form-group-single">
+                <label htmlFor="last-name" className="label">
+                  Confirm Password
+                </label>
+                <input
+                  type="text"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={index2.confirmPassword}
+                  placeholder="Confirm password"
+                  onChange={handleChange2}
                 />
               </div>
             </div>
@@ -369,9 +641,11 @@ const Registration = () => {
                 </label>
                 <input
                   type="text"
-                  id="address_line"
-                  name="address_line"
+                  id="address"
+                  name="address"
+                  value={index2.address}
                   placeholder="Enter Address Line"
+                  onChange={handleChange2}
                 />
               </div>
               <div className="form-group">
@@ -397,38 +671,62 @@ const Registration = () => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="first-name" className="label">
+                <label htmlFor="category" className="label">
                   City{" "}
                 </label>
-                <input
-                  type="text"
+                <select
                   id="city"
                   name="city"
-                  placeholder="Enter city"
-                />
+                  className="select"
+                  onChange={handleChange2}
+                >
+                  <option value="" disabled selected hidden>
+                    Select your City
+                  </option>
+                  {cities.map((city) => {
+                    return <option value={city}> {city}</option>;
+                  })}
+                </select>
               </div>
               <div className="form-group">
                 <label htmlFor="category" className="label">
                   Country{" "}
                 </label>
-                <select id="country" name="country" className="select">
-                  <option value="option1">Nigeria</option>
-                  <option value="option2">Married</option>
+                <select
+                  id="country"
+                  name="country"
+                  className="select"
+                  onChange={handleChange2}
+                >
+                  <option value="" disabled selected hidden>
+                    Select your Country
+                  </option>
+                  <option value="Nigeria">Nigeria</option>
                 </select>
               </div>
               <div className="form-group">
                 <label htmlFor="category" className="label">
                   State{" "}
                 </label>
-                <select id="State" name="State" className="select">
-                  <option value="option1">Enugu</option>
-                  <option value="option2">Married</option>
+                <select
+                  id="State"
+                  name="state"
+                  value={index2.state}
+                  onChange={handleChange2}
+                  className="select"
+                >
+                  <option value="" disabled selected hidden>
+                    Select your state
+                  </option>
+                  {states.map((state) => {
+                    return <option value={state}> {state}</option>;
+                  })}
                 </select>
               </div>
             </div>
 
             <div style={{ width: "90%" }} className="continue">
-              <Button text="continue" onClick={() => setIndex(2)} />
+              <Button text="continue" onClick={() => handleIndex2Change()} />
             </div>
             <Typography className="typo">
               Already have an account? <span className="sign-in">Sign In</span>
@@ -478,6 +776,7 @@ const Registration = () => {
                 direction={{ md: "row", xs: "column" }}
                 justifyContent="space-between"
                 sx={{
+                  opacity: ".4",
                   width: "100%",
                   display: "flex",
                   alignItems: "center",
@@ -487,9 +786,19 @@ const Registration = () => {
                 <button className="img-button">Open Camera</button>
                 <button className="img-button">Choose from file</button>
               </Stack>
+              <Typography sx={{ color: "red" }}>
+                {" "}
+                Image upload feature not available, continue to signup
+              </Typography>
 
               <div style={{ width: "100%" }} className="continue">
-                <Button text="continue" />
+                <Button
+                  text="continue"
+                  onClick={() => {
+                    setIndex(3);
+                    handleRegisterUser();
+                  }}
+                />
               </div>
             </Box>
 
@@ -498,136 +807,19 @@ const Registration = () => {
             </Typography>
           </Box>
         )}
-        {index === 3 && (
-          <Box
-            sx={{
-              width: "70%",
-              height: "100%",
-            }}
-            className="page-1"
-          >
-            <Box className="welcome">
-              <p className="text"> Welcome!</p>
-              <h5 className="text-2">Sign Up to create your account</h5>
-            </Box>
-            <Box
-              className="personal-information"
-              sx={{ width: "90%", padding: "20px 0px 0px 0px" }}
-            >
-              <p className="personal-information"> Personal Information</p>
-              <hr className="line" />
-            </Box>
-            <div className="form-container">
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  placeholder="Mr/Mrs/Miss"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="first-name"
-                  name="first-name"
-                  placeholder="John "
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="last-name" className="label">
-                  Middle Name
-                </label>
-                <input
-                  type="text"
-                  id="middle-name"
-                  name="middle-name"
-                  placeholder="Doe"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="last-name" className="label">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="last-name"
-                  name="last-name"
-                  placeholder="Mark"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="category" className="label">
-                  Gender
-                </label>
-                <select id="category" name="category" className="select">
-                  <option value="option1">Male</option>
-                  <option value="option2">Female</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="date" className="label">
-                  Date
-                </label>
-                <input type="date" id="date" name="date" />
-              </div>
-            </div>
-            <Box className="personal-information" sx={{ width: "90%" }}>
-              <p className="personal-information"> Contact Information</p>
-              <hr className="line" />
-            </Box>
-            <div className="form-container">
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  BVN Mobiel Number
-                </label>
-                <input
-                  type="text"
-                  id="bvn_mobile_number"
-                  name="bvn_mobile_number"
-                  placeholder="Enter Mobile Number"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="first-name" className="label">
-                  Preferred Mobile Number
-                </label>
-                <input
-                  type="text"
-                  id="preferred_mobile_number"
-                  name="bvn_mobile_number"
-                  placeholder="Enter Mobiie Number"
-                />
-              </div>
-              <div className="form-group-single form-group">
-                <label htmlFor="last-name" className="label">
-                  Email Address
-                </label>
-                <input
-                  type="text"
-                  id="email_address"
-                  name="email_address"
-                  placeholder="Enter Email Address"
-                />
-              </div>
-            </div>
-            <div style={{ width: "90%" }} className="continue">
-              <Button text="continue" />
-            </div>
-            <Typography className="typo">
-              Already have an account? <span className="sign-in">Sign In</span>
-            </Typography>
-          </Box>
-        )}
+        <RegModal
+          open={open}
+          close={close}
+          handleClose={handleClose}
+          handleOpen={handleOpen}
+        />
+        <PositionedSnackbar
+          open={alert}
+          message={message}
+          handleClose={handleAClose}
+        />
       </Box>
     </Stack>
   );
 };
-
 export default Registration;

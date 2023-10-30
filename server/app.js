@@ -4,11 +4,13 @@ const cors = require("cors");
 const db = require("./db/connectDb");
 const PORT = process.env.PORT;
 const errorMiddleware = require("./middleware/error");
+const bodyParser = require("body-parser");
 const app = express();
 
 //routes
 const authRoute = require("./routes/authRoute");
 const loanRoute = require("./routes/loanRoute");
+const transferRoute = require("./routes/transferRoute");
 
 //Handle Uncaught exceptions
 process.on("uncaughtException", (err) => {
@@ -17,14 +19,27 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin , X-Requested-with, Content-Type, Accept"
+  );
+  next();
+});
+
 //middlewares
 app.use(cors());
 app.use(express.json());
-app.use(errorMiddleware);
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 //app routes goes here guys
 app.use("/api/v1", authRoute);
-app.use("/peerloan", loanRoute);
+app.use("api/v1/peerloan", loanRoute);
+app.use("/api/v1/transfer", transferRoute)
+
+app.use(errorMiddleware);
 
 //start server
 const start = async () => {
