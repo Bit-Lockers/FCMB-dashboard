@@ -38,7 +38,7 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
   // Check if the email is unique
   const checkUserEmail = await User.findOne({ email });
   if (checkUserEmail) {
-    return next(new ErrorHandler("The email provided needs to be unique", 403));
+    return next(new ErrorHandler("Email already exist", 403));
   }
 
   try {

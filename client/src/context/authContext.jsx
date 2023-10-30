@@ -1,5 +1,6 @@
 import React, { useContext, createContext, useState } from "react";
 import axios from "axios";
+
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -30,20 +31,27 @@ const AuthProvider = ({ children }) => {
   });
 
   //function to register user
-  const registerUser = async (upload) => {
-    try {
-      setLoading(true);
-      const { data } = await axios.post(`/register`, upload);
-      setUser(data.user);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-  };
+  // const registerUser = async (upload) => {
+  //   try {
+  //     setLoading(true);
+  //     const { data } = await axios.post(`/register`, upload);
+  //     setUser(data.user);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //     console.log(error);
+  //   }
+  // };
   return (
     <AuthContext.Provider
-      value={(user, setUser, registerUser, loading, data, setData)}
+      value={{
+        user,
+        setUser,
+        loading,
+        setLoading,
+        data,
+        setData,
+      }}
     >
       {children}
     </AuthContext.Provider>
