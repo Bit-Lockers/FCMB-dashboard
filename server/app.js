@@ -18,6 +18,7 @@ const io = require("socket.io")(server, {
 //routes
 const authRoute = require("./routes/authRoute");
 const loanRoute = require("./routes/loanRoute");
+const transferRoute = require("./routes/transferRoute");
 
 //Handle Uncaught exceptions
 process.on("uncaughtException", (err) => {
