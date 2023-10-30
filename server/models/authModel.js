@@ -86,7 +86,7 @@ const authSchema = new mongoose.Schema({
   salutation: {
     type: String,
     required: [true, "Please provide a salutation to create an account"],
-    enum: ["Mr", "Mrs", "Master", "Mistress"],
+    enum: ["Mr", "Mrs", "Master", "Miss"],
   },
   address: {
     type: String,
