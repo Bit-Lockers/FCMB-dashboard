@@ -3,6 +3,8 @@ import { Avatar, Box, Button, Grid, Paper, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import Clear from "@mui/icons-material/Clear";
 import MonitorLoan from "./MonitorLoan";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const keys1 = [
   "Status",
@@ -40,7 +42,7 @@ const detail1 = (key, index) => {
         justifyContent: "space-between",
         padding: "12px 0px",
       }}
-      className= "detail"
+      className="detail"
     >
       <Typography>{key}:</Typography>
       <Typography>{values1[index]}</Typography>
@@ -57,7 +59,7 @@ const detail2 = (key, index) => {
         justifyContent: "space-between",
         padding: "12px 0px",
       }}
-      className= "detail"
+      className="detail"
     >
       <Typography>{key}:</Typography>
       <Typography>{values2[index]}</Typography>
@@ -66,6 +68,26 @@ const detail2 = (key, index) => {
 };
 
 const LoanDetail = () => {
+  const [probability, setProbability] = useState("loading...")
+  const requestBody = {
+    age: 28,
+    sex: "Female",
+    marital_status: "single",
+    employment_status: "employee",
+  };
+
+  const url = "https://credit-score-calc.onrender.com/calc";
+  useEffect(() => {
+    axios
+    .post(url, requestBody)
+    .then((response) => {
+      setProbability(`${response.data.credit_score}%`)
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  }, [])
+  
   return (
     <Paper sx={{ backgroundColor: "#F0F4FF", padding: "20px" }}>
       <Typography
@@ -180,6 +202,7 @@ const LoanDetail = () => {
               <Box>
                 <Typography>Bamidele Precious</Typography>
                 <Typography variant="subtitle1">Beneficiary</Typography>
+                <Typography>Credit Score: {probability}</Typography>
               </Box>
             </Box>
             <Button variant="contained" sx={{ padding: "10px 22px" }}>
