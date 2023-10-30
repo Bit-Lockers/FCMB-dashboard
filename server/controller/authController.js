@@ -84,7 +84,11 @@ const registerUser = catchAsyncErrors(async (req, res, next) => {
   } catch (error) {
     console.error("Error creating the account:", error);
     return next(
-      new ErrorHandler("An error occurred while creating the account.", 500)
+      new ErrorHandler(
+        "An error occurred while creating the account.",
+        error,
+        500
+      )
     );
   }
 });
@@ -166,9 +170,22 @@ const getAllUsers = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+const logoutUser = catchAsyncErrors(async (req, res, next) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "You are successfully logged out!",
+  });
+});
+
 module.exports = {
   registerUser,
   loginUser,
   getAllUsers,
   getOneUser,
+  logoutUser,
 };
