@@ -101,7 +101,11 @@ const Registration = () => {
       setOpen(true);
       const res = await axios.post(
         `http://localhost:5000/api/v1/register`,
-        data
+        data,
+        {
+          withCredentials: true,
+          credentials: "include",
+        }
       );
       setUser(res?.data?.user);
       setOpen(false);

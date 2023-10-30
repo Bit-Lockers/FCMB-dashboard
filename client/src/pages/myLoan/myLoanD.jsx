@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Stack, IconButton } from "@mui/material";
 import SidebarDrawer from "../../components/SidebarBrawer";
-import "./dashbord.css";
+import "../dashboard/dashbord.css";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import "../../app.scss";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArticleIcon from "@mui/icons-material/Article";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import { authState } from "../../context/authContext";
-import LoadReqSug from "./loadReqSug";
+import MyLoanDashboard from "./MyLoanDashboard";
 
-function Dashboard() {
+function MyLoanD() {
   const { user } = authState();
   const [state, setState] = useState(true);
   const [navbar, setNavbar] = useState(true);
   const [open, setOpen] = useState(false);
-  console.log(user);
   const toggle = () => {
     setState((prev) => !prev);
   };
@@ -103,7 +99,7 @@ function Dashboard() {
                     <ArticleIcon sx={{ fontSize: "1.2em" }} />
                   </IconButton>
                 </Box>
-
+                {/* 
                 <div className="introduction">
                   <p className="welcome-message">
                     {" "}
@@ -113,65 +109,9 @@ function Dashboard() {
                     {" "}
                     Your financial dreams are just a click away!
                   </p>
-                </div>
+                </div> */}
                 <Box sx={{ marginTop: "20px" }}>
-                  <Box className="account-balance">
-                    <Box className="ballance-info">
-                      <Stack spacing={2} direction="row">
-                        <Typography className="balance">
-                          Total Balance
-                        </Typography>
-                        <RemoveRedEyeIcon />
-                      </Stack>
-                      <Typography className="big-bal" sx={{ fontSize: "28px" }}>
-                        &#8358;{user?.balance}
-                        <span className="small-span">.00</span>{" "}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-                <Box
-                  className="grid-container"
-                  sx={{
-                    width: "100%",
-                    marginTop: "20px",
-                  }}
-                >
-                  <div className="grid-item">
-                    <div className="active-loan">
-                      <CreditScoreIcon sx={{ color: "white" }} />
-                    </div>
-                    <p>Active loan</p>
-                    <p>0</p>
-                  </div>
-                  <div className="grid-item">
-                    <div className="pending-loan">
-                      <AccessTimeIcon sx={{ color: "white" }} />
-                    </div>
-                    <p>Pending Loan Requests</p>
-                    <p>0</p>
-                  </div>
-                  <div className="grid-item">
-                    <div className="total-lend">
-                      <CreditScoreIcon sx={{ color: "white" }} />
-                    </div>
-                    <p>Total Lended</p>
-                    <Typography className="big-bal" sx={{ fontSize: "28px" }}>
-                      &#8358;0<span className="small-span">.00</span>{" "}
-                    </Typography>
-                  </div>
-                  <div className="grid-item">
-                    <div className="active-loan">
-                      <CreditScoreIcon sx={{ color: "white" }} />
-                    </div>
-                    <p>Total Earned</p>
-                    <Typography className="big-bal" sx={{ fontSize: "28px" }}>
-                      &#8358;0<span className="small-span">.00</span>{" "}
-                    </Typography>
-                  </div>
-                </Box>
-                <Box sx={{ marginTop: "20px" }}>
-                  <LoadReqSug />
+                  <MyLoanDashboard />
                 </Box>
               </Box>
             </Box>
@@ -183,4 +123,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default MyLoanD;
