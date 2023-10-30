@@ -17,7 +17,13 @@ const style = {
   background: "#FFF",
 };
 
-export default function RegModal({ open, setOpen, handleOpen, handleClose }) {
+export default function RegModal({
+  open,
+  setOpen,
+  handleOpen,
+  handleClose,
+  message,
+}) {
   return (
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
@@ -38,7 +44,7 @@ export default function RegModal({ open, setOpen, handleOpen, handleClose }) {
             }}
           >
             <CircularProgress sx={{ color: "#0C3397" }} size={40} />
-            <Typography>Creating Account ...</Typography>
+            <Typography> {message}</Typography>
           </Stack>
         </Box>
       </Modal>
