@@ -11,7 +11,6 @@ const INVALID_DATE_MESSAGE = "Invalid repaymentTime format. Use YYYY-MM-DD.";
 const LoanRequest = require("../models/loanModel");
 const AccountDetail = require("../models/AccountModel");
 
-
 /**
  * @route PATCH /peerloan/request/
  */
@@ -264,6 +263,26 @@ const payLoanController = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
+const deleteLoanController = catchAsyncErrors(async (req, res, next) => {
+  const { loanRequestId, borrowerId } = req.body;
+  try {
+    const loanRequest = await LoanRequest.findById(loanRequestId);
+    if (loanRequest.borrowerId != borrowerId) {
+      return next(new ErrorHandler("You did not request this loan", 400));
+    }
+    if (loanRequest.status != "Pending") {
+      return next(
+        new ErrorHandler("You can not delete accepted or closed loan request", 400)
+      );
+    }
+    loanRequest.status = "Closed";
+    await loanRequest.save();
+    res.status(200).json({message: "Loan closed successfully."})
+  } catch (error) {
+    return next(new ErrorHandler(DEFAULT_ERROR_MESSAGE, 500));
+  }
+});
+
 module.exports = {
   loanRequestController,
   loanAcceptController,
@@ -271,4 +290,5 @@ module.exports = {
   viewManyLoanController,
   viewFilterLoanController,
   payLoanController,
+  deleteLoanController
 };
