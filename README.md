@@ -76,21 +76,21 @@ The Loan Request System utilizes the following technologies:
 The project is structured into separate folders for the frontend and backend, each with its own set of files. Here's a basic overview of the project structure:
 peerpocket/
 │
-├── client/ # React frontend
-│ ├── public/
-│ ├── src/
-│ ├── package.json
-│ └── ...
-│
-├── server/ # Node.js and Express.js backend
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ ├── app.js
-│ ├── package.json
-│ └── ...
-│
-└── README.md
+├── client/ # React frontend  
+│ ├── public/  
+│ ├── src/  
+│ ├── package.json  
+│ └── ...  
+│  
+├── server/ # Node.js and Express.js backend  
+│ ├── controllers/  
+│ ├── models/  
+│ ├── routes/  
+│ ├── app.js  
+│ ├── package.json  
+│ └── ...  
+│  
+└── README.md  
 
 ## 6. Getting Started
 
