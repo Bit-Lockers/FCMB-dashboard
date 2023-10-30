@@ -9,9 +9,9 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArticleIcon from "@mui/icons-material/Article";
 import { authState } from "../../context/authContext";
-import MyLoanDashboard from "./MyLoanDashboard";
+import NewLoanRequest from "./NewLoanRequest";
 
-function MyLoanD() {
+function NewLoanD() {
   const { user } = authState();
   const [state, setState] = useState(true);
   const [navbar, setNavbar] = useState(true);
@@ -111,7 +111,7 @@ function MyLoanD() {
                   </p>
                 </div> */}
                 <Box sx={{ marginTop: "20px" }}>
-                  <MyLoanDashboard />
+                  <NewLoanRequest />
                 </Box>
               </Box>
             </Box>
@@ -123,4 +123,4 @@ function MyLoanD() {
   );
 }
 
-export default MyLoanD;
+export default NewLoanD;

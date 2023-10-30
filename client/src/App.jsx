@@ -14,6 +14,8 @@ import LoanDetail from "./pages/loanRequestDetail/LoanDetail";
 import LoanDailD from "./pages/loanRequestDetail/LoanDailD";
 import DisputeChatbot from "./pages/chatBot/DisputeChatBot";
 import MyLoanDashboard from "./pages/myLoan/MyLoanDashboard";
+import MyLoanD from "./pages/myLoan/myLoanD";
+import NewLoanD from "./pages/myLoan/NewLoanD";
 // import NewLoanRequest from "./pages/myLoan/NewLoanRequest";
 // import ChatBot from "./pages/chatBot/ChatBot";
 // import Setting from "./pages/setting/Setting";
@@ -54,7 +56,8 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/loanDetail" element={<LoanDailD />} />
       <Route path="/loan" element={<DisputeChatbot />} />
-      <Route path="/myLoan" element={<MyLoanDashboard />} />
+      <Route path="/myLoan" element={<MyLoanD />} />
+      <Route path="/newLoan" element={<NewLoanD />} />
     </Routes>
   );
 }
